@@ -19,8 +19,7 @@
         </a>
         <p>Name: {{ photo.photoName }}</p>
         <p>uploaded by {{ photo.userId.username }}</p>
-        <p>Description: {{ photo.description }}</p>
-        <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+        <a href="/photos/{{photo.key}}"><img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
       </div>
     {{/each }}
   </div>

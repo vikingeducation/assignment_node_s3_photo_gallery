@@ -7,13 +7,10 @@ const Photo = require("../models/Photo");
 // Index
 // ----------------------------------------
 router.get(["/", "/photos"], (req, res) => {
-  Photo.find({})
-  .populate("userId")
-  .then((photos) => {
+  Photo.find({}).populate("userId").then(photos => {
     console.log("Photos: ", photos);
-    res.render("photos/index", { photos, user: req.user});    
-  })
-
+    res.render("photos/index", { photos, user: req.user });
+  });
 });
 
 // ----------------------------------------
@@ -29,7 +26,7 @@ router.get("/photos/new", (req, res) => {
 const mw = FileUpload.single("photo[file]");
 router.post("/photos", mw, (req, res, next) => {
   console.log("Files", req.file);
-  console.log("form data", req.body)
+  console.log("form data", req.body);
 
   FileUpload.upload({
     data: req.file.buffer,
@@ -45,6 +42,18 @@ router.post("/photos", mw, (req, res, next) => {
       res.redirect("/photos");
     })
     .catch(next);
+});
+
+// ----------------------------------------
+// Show Photo
+// ----------------------------------------
+router.get("/photos/:id", (req, res) => {
+  Photo.find({ key: req.params.id }).populate("userId").then(photo => {
+    Photo.find({ userId: photo.userId._id }).then(photos => {
+      console.log("PHOTOS", photos);
+      res.render("photos/show", { photo, photos, user: req.user });
+    });
+  });
 });
 
 // ----------------------------------------
