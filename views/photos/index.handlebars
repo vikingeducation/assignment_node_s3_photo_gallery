@@ -13,11 +13,13 @@
     {{#each photos as |photo key| }}
       <div class="col-xs-4">
         <a
-          href="/photos/{{ photo.name }}?_method=delete"
+          href="/photos/{{ photo.key }}?_method=delete"
           class="text-danger">
           &times;
         </a>
-        <p>{{ photo.name }}</p>
+        <p>Name: {{ photo.photoName }}</p>
+        <p>uploaded by {{ photo.userId.username }}</p>
+        <p>Description: {{ photo.description }}</p>
         <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
       </div>
     {{/each }}

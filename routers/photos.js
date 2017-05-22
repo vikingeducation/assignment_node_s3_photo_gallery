@@ -1,21 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const FileUpload = require("./../services/file_upload");
+const Photo = require("../models/Photo");
 
 // ----------------------------------------
 // Index
 // ----------------------------------------
 router.get(["/", "/photos"], (req, res) => {
-  const photos = require("./../data/photos");
-  console.log(photos);
-  res.render("photos/index", { photos });
+  Photo.find({})
+  .populate("userId")
+  .then((photos) => {
+    console.log("Photos: ", photos);
+    res.render("photos/index", { photos, user: req.user});    
+  })
+
 });
 
 // ----------------------------------------
 // New
 // ----------------------------------------
 router.get("/photos/new", (req, res) => {
-  res.render("photos/new");
+  res.render("photos/new", { user: req.user });
 });
 
 // ----------------------------------------
@@ -24,13 +29,14 @@ router.get("/photos/new", (req, res) => {
 const mw = FileUpload.single("photo[file]");
 router.post("/photos", mw, (req, res, next) => {
   console.log("Files", req.file);
+  console.log("form data", req.body)
 
   FileUpload.upload({
     data: req.file.buffer,
     name: req.file.originalname,
     mimetype: req.file.mimetype,
-    photoName: req.body.photo[name],
-    description: req.body.photo[description],
+    photoName: req.body.photo.name,
+    description: req.body.photo.description,
     userId: req.body.userId
   })
     .then(data => {

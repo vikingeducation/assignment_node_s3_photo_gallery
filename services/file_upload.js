@@ -60,23 +60,12 @@ FileUploader.upload = file => {
       } else {
         const photo = new Photo({
           url: data.Location,
-          photoName: data.photoName,
-          description: data.description,
-          userId: data.userId
+          key: data.Key,
+          photoName: file.photoName,
+          description: file.description,
+          userId: file.userId
         });
 
-        // Else we're going to
-        // write the data to a file
-        // (instead of using a database)
-        // const photos = require(PHOTO_DATA_PATH);
-        // const photo = {
-        //   url: data.Location,
-        //   name: data.key
-        // };
-        // photos[data.key] = photo;
-        // _writePhotoDataFile(photos);
-
-        // Resolve the photo data
         photo.save((err, photo) => {
           if (err) {
             reject(err);
@@ -102,15 +91,10 @@ FileUploader.remove = id => {
       if (err) {
         reject(err);
       } else {
-        // Delete the photo from the JSON
-        // file-based database
-        // if successful and resolve
-        // the photo data
-        const photos = require(PHOTO_DATA_PATH);
-        const photo = _.clone(photos[id]);
-        delete photos[id];
-        _writePhotoDataFile(photos);
-        resolve(photo);
+        Photo.remove({ key: id })
+        .then(() => {
+          resolve();
+        })        
       }
     });
   });
