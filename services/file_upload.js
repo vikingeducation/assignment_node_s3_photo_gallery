@@ -1,4 +1,5 @@
 const AWS = require("aws-sdk");
+AWS.config.update({region: 'us-east-2'});
 const s3 = new AWS.S3();
 const bucket = process.env.AWS_S3_BUCKET;
 const mime = require("mime");
