@@ -1,0 +1,20 @@
+{
+  "name": "assignment_node_s3_photo_gallery",
+  "version": "1.0.0",
+  "description": "Uploading images to Amazon S3 in an Express application? Brilliant!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicoasp/assignment_node_s3_photo_gallery.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nicoasp/assignment_node_s3_photo_gallery/issues"
+  },
+  "homepage": "https://github.com/nicoasp/assignment_node_s3_photo_gallery#readme"
+}
