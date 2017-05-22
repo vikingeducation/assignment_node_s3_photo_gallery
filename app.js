@@ -26,17 +26,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   })
 // );
 
-// app.use((req, res, next) => {
-//   app.locals.session = req.session;
-//   next();
-// });
-
-// ----------------------------------------
-// Flash Messages
-// ----------------------------------------
-const flash = require("express-flash-messages");
-app.use(flash());
-
 // ----------------------------------------
 // Method Override
 // ----------------------------------------
@@ -71,7 +60,16 @@ app.use(
     saveUninitialized: false,
     resave: false
   })
-)
+);
+app.use((req, res, next) => {
+  app.locals.session = req.session;
+  next();
+});
+// ----------------------------------------
+// Flash Messages
+// ----------------------------------------
+const flash = require("express-flash-messages");
+app.use(flash());
 
 // require Passport and the Local Strategy
 const passport = require("passport");
@@ -110,6 +108,22 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+const loggedInOnly = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect("login");
+  }
+};
+
+const loggedOutOnly = (req, res, next) => {
+  if (!req.user) {
+    next();
+  } else {
+    res.redirect("/");
+  }
+};
+
 // 1
 app.get("/", (req, res) => {
   if (req.user) {
@@ -127,7 +141,6 @@ app.get("/login", (req, res) => {
 app.get("/register", (req, res) => {
   res.render("sessions/register");
 });
-
 
 // 3
 app.post(
@@ -148,7 +161,8 @@ app.post("/register", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/"); });
+      return res.redirect("/");
+    });
   });
 });
 
@@ -222,15 +236,11 @@ morgan.token("data", (req, res, next) => {
   return `${data}`;
 });
 
-
-
-
 // ----------------------------------------
 // Routes
 // ----------------------------------------
 const photosRouter = require("./routers/photos");
-app.use("/", photosRouter);
-
+app.use("/", loggedInOnly, photosRouter);
 
 // ----------------------------------------
 // Template Engine
@@ -246,7 +256,6 @@ const hbs = expressHandlebars.create({
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
-
 
 // ----------------------------------------
 // Server

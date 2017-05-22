@@ -18,7 +18,7 @@
           &times;
         </a>
         <p>Name: {{ photo.photoName }}</p>
-        <p>uploaded by {{ photo.userId.username }}</p>
+        <p>uploaded by <a href="/users/{{photo.userId._id}}">{{ photo.userId.username }}</a></p>
         <a href="/photos/{{photo.key}}"><img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
       </div>
     {{/each }}

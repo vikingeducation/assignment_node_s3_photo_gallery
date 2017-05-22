@@ -50,31 +50,28 @@ router.post("/photos", mw, (req, res, next) => {
 // ----------------------------------------
 router.get("/photos/:id", (req, res) => {
   let photo;
-  Photo.findOne({ key: req.params.id }).populate("userId")
+  Photo.findOne({ key: req.params.id })
+    .populate("userId")
     .then(foundPhoto => {
       photo = foundPhoto;
-      return Photo.find({ userId: photo.userId._id }).limit(3)
+      return Photo.find({ userId: photo.userId._id }).limit(3);
     })
     .then(photos => {
-      photos = photos.filter((eachPhoto) => {
-        return eachPhoto.key !== photo.key
+      photos = photos.filter(eachPhoto => {
+        return eachPhoto.key !== photo.key;
       });
-      res.render("photos/show", { photo, photos, user: req.user });     
+      res.render("photos/show", { photo, photos, user: req.user });
     });
- 
 });
 
 // ----------------------------------------
 // Users Index
 // ----------------------------------------
 router.get("/users", (req, res) => {
-  User.find({})
-    .then(users => {
-      res.render("users/index", { users, user: req.user });     
-    });
- 
+  User.find({}).then(users => {
+    res.render("users/index", { users, user: req.user });
+  });
 });
-
 
 // ----------------------------------------
 // Show User
@@ -83,24 +80,31 @@ router.get("/users/:id", (req, res) => {
   let selectedUser;
   User.findById(req.params.id)
     .then(foundUser => {
+      console.log("foundUser", foundUser);
       selectedUser = foundUser;
-      return Photo.find({ userId: user._id })
+      return Photo.find({ userId: foundUser._id });
     })
     .then(photos => {
-      res.render("users/show", { selectedUser, photos, user: req.user });     
+      res.render("users/show", { selectedUser, photos, user: req.user });
     });
- 
 });
 
 // ----------------------------------------
 // Destroy
 // ----------------------------------------
 router.delete("/photos/:id", (req, res, next) => {
-  FileUpload.remove(req.params.id)
-    .then(() => {
-      res.redirect("/photos");
-    })
-    .catch(next);
+  Photo.findOne({ key: req.params.id }).then(photo => {
+    if (req.user._id.toString() === photo.userId.toString()) {
+      FileUpload.remove(req.params.id)
+        .then(() => {
+          res.redirect("/photos");
+        })
+        .catch(next);
+    } else {
+      req.flash("error", "You can delete only your own photos!");
+      res.redirect("back");
+    }
+  });
 });
 
 module.exports = router;
