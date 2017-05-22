@@ -113,7 +113,7 @@ passport.deserializeUser(function(id, done) {
 // 1
 app.get("/", (req, res) => {
   if (req.user) {
-    res.render("photos/index", { user: req.user });
+    res.redirect("/photos");
   } else {
     res.redirect("/login");
   }

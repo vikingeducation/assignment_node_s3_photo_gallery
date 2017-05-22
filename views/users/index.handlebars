@@ -1,0 +1,17 @@
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>username</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users as |user| }}
+      <tr>
+        <td>
+          <a href="/users/{{user._id}}"><p>{{ user.username }}</p></a>
+        </td>
+      </tr>
+      {{/each }}
+    </tbody>
+  </table>
