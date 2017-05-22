@@ -28,7 +28,10 @@ router.post("/photos", mw, (req, res, next) => {
   FileUpload.upload({
     data: req.file.buffer,
     name: req.file.originalname,
-    mimetype: req.file.mimetype
+    mimetype: req.file.mimetype,
+    photoName: req.body.photo[name],
+    description: req.body.photo[description],
+    userId: req.body.userId
   })
     .then(data => {
       console.log(data);

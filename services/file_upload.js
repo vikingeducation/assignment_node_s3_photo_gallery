@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-AWS.config.update({region: 'us-east-2'});
+AWS.config.update({ region: "us-east-2" });
 const s3 = new AWS.S3();
 const bucket = process.env.AWS_S3_BUCKET;
 const mime = require("mime");
@@ -12,17 +12,19 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+const Photo = require("../models/Photo");
+
 // Helpers for managing the file-based
 // database for storing photo data
-const PHOTO_DATA_PATH = path.resolve("./data/photos.json");
-console.log("PATH", PHOTO_DATA_PATH);
-const _writePhotoDataFile = photos => {
-  fs.writeFileSync(PHOTO_DATA_PATH, JSON.stringify(photos, null, 2));
-};
+// const PHOTO_DATA_PATH = path.resolve("./data/photos.json");
+// console.log("PATH", PHOTO_DATA_PATH);
+// const _writePhotoDataFile = photos => {
+//   fs.writeFileSync(PHOTO_DATA_PATH, JSON.stringify(photos, null, 2));
+// };
 
-if (!fs.existsSync(PHOTO_DATA_PATH)) {
-  _writePhotoDataFile({});
-}
+// if (!fs.existsSync(PHOTO_DATA_PATH)) {
+//   _writePhotoDataFile({});
+// }
 
 const FileUploader = {};
 
@@ -56,19 +58,32 @@ FileUploader.upload = file => {
       if (err) {
         reject(err);
       } else {
+        const photo = new Photo({
+          url: data.Location,
+          photoName: data.photoName,
+          description: data.description,
+          userId: data.userId
+        });
+
         // Else we're going to
         // write the data to a file
         // (instead of using a database)
-        const photos = require(PHOTO_DATA_PATH);
-        const photo = {
-          url: data.Location,
-          name: data.key
-        };
-        photos[data.key] = photo;
-        _writePhotoDataFile(photos);
+        // const photos = require(PHOTO_DATA_PATH);
+        // const photo = {
+        //   url: data.Location,
+        //   name: data.key
+        // };
+        // photos[data.key] = photo;
+        // _writePhotoDataFile(photos);
 
         // Resolve the photo data
-        resolve(photo);
+        photo.save((err, photo) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(photo);
+          }
+        });
       }
     });
   });
