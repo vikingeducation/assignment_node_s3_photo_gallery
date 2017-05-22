@@ -126,10 +126,18 @@ morgan.token("data", (req, res, next) => {
 });
 
 // ----------------------------------------
+// Authentication
+// ----------------------------------------
+const auth = require('./services/auth');
+app.use("/", auth)
+
+
+// ----------------------------------------
 // Routes
 // ----------------------------------------
 const photosRouter = require("./routers/photos");
 app.use("/", photosRouter);
+
 
 // ----------------------------------------
 // Template Engine
@@ -145,6 +153,7 @@ const hbs = expressHandlebars.create({
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
+
 
 // ----------------------------------------
 // Server
