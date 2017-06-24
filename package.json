@@ -4,7 +4,10 @@
   "description": "Uploading images to Amazon S3 in an Express application? Brilliant!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "c": "node repl.js",
+    "clean": "node seeds",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",

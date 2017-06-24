@@ -21,6 +21,30 @@ const flash = require("express-flash-messages");
 app.use(flash());
 
 // ----------------------------------------
+// Method Override
+// ----------------------------------------
+app.use((req, res, next) => {
+  let method;
+  if (req.query._method) {
+    method = req.query._method;
+    delete req.query._method;
+    for (let key in req.query) {
+      req.body[key] = decodeURIComponent(req.query[key]);
+    }
+  } else if (typeof req.body === "object" && req.body._method) {
+    method = req.body._method;
+    delete req.body._method;
+  }
+
+  if (method) {
+    method = method.toUpperCase();
+    req.method = method;
+  }
+
+  next();
+});
+
+// ----------------------------------------
 // Sessions/Cookies
 // ----------------------------------------
 const cookieSession = require("cookie-session");
@@ -167,15 +191,24 @@ passport.deserializeUser(function(id, done) {
 // ----------------------------------------
 // Routes
 // ----------------------------------------
-const ponzIo = require("./routes/ponzio");
 const login = require("./routes/login");
 const logout = require("./routes/logout");
 const register = require("./routes/register");
+const photos = require("./routes/photos");
+const users = require("./routes/users");
 
-app.use("/", ponzIo);
 app.use("/login", login);
 app.use("/logout", logout);
 app.use("/register", register);
+app.use("/photos", photos);
+app.use("/users", users);
+app.use("/", (req, res) => {
+  if (req.user) {
+    res.redirect("/photos");
+  } else {
+    res.redirect("/login");
+  }
+});
 
 // ----------------------------------------
 // Server

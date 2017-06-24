@@ -1,13 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const models = require('./../models');
+const models = require("./../models");
 const User = models.User;
-const passport = require('passport');
+const passport = require("passport");
 
 router.get("/", (req, res) => {
   res.render("register/index");
 });
-
 
 router.post("/", (req, res, next) => {
   const { fname, lname, email, password } = req.body;
@@ -17,7 +16,8 @@ router.post("/", (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/"); });
+      return res.redirect("/");
+    });
   });
 });
 

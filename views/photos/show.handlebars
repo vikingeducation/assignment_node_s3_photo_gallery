@@ -1,0 +1,35 @@
+<div>
+  <h1>Photo: {{ mainPhoto.id }} </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <img src="{{ mainPhoto.url }}" alt="" class="img-responsive">
+    <h3>Uploaded by: <a href="{{ usersShowPath mainPhoto.owner.id }}">{{ mainPhoto.owner.email }}</a></h3>
+    {{#if mainPhoto.description }}
+    <h4> Description: {{ mainPhoto.description }}</h4>
+    {{else }}
+    <h4> The user has not provided any description for this photo. </h4>
+    {{/if }}
+    {{#if (isPhotoOwnedByUser @root.user.id mainPhoto.owner.id) }}
+    <a href="{{ photosDeletePath mainPhoto.name }}">
+      <button class="btn btn-danger">Delete Photo</button>
+    </a>
+    {{/if }}
+  </div>
+</div>
+
+<div class="row related-photos">
+  <h4>Other photos uploaded by the same user: </h4>
+  {{#if relatedPhotos.length }}
+    {{#each relatedPhotos as |photo| }}
+      <div class="col-md-4">
+        <a href="{{ photosShowPath photo.id }}">
+          <img src="{{ photo.url }}" class="img-responsive" alt="">
+        </a>
+      </div>
+    {{/each }}
+  {{else }}
+  <h5>The user has not uploaded any other photos!</h5>
+  {{/if }}
+</div>

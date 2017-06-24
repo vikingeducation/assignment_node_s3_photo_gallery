@@ -1,0 +1,29 @@
+<div class="row">
+  <h1>User: {{ viewedUser.email }}</h1>
+</div>
+
+<div class="row">
+  <h4>First Name: {{ viewedUser.fname }}</h4>
+  <h4>Last Name: {{ viewedUser.lname }}</h4>
+  <h4>Email: {{ viewedUser.email }}</h4>
+</div>
+
+<div class="row related-photos">
+  <h4>Photos uploaded by this user: </h4>
+  {{#if viewedUser.photos.length }}
+    {{#each viewedUser.photos as |photo| }}
+      <div class="col-md-4">
+        <a href="{{ photosShowPath photo.id }}">
+          <img src="{{ photo.url }}" class="img-responsive" alt="">
+        </a>
+        {{#if (isPhotoOwnedByUser @root.user.id photo.owner) }}
+        <a href="{{ photosDeletePath photo.name }}">
+          <button class="btn btn-danger">Delete Photo</button>
+        </a>
+        {{/if }}
+      </div>
+    {{/each }}
+  {{else }}
+  <h5>The user has not uploaded any photos!</h5>
+  {{/if }}
+</div>

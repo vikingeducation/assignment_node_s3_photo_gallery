@@ -1,0 +1,27 @@
+<div class="row">
+  <h1>Photos</h1>
+  <div class="col-md-3 col-md-offset-9">
+    <a href="{{ photosNewPath }}">
+      <button class="btn btn-success btn-block">
+        Upload a New Photo
+      </button>
+    </a>
+  </div>
+</div>
+
+<div class="row photo-index">
+  {{#if photos.length }}
+    {{#each photos as |photo| }}
+    <div class="col-md-4">
+      <a href="{{ photosShowPath photo.id }}">
+        <img src="{{ photo.url }}" class="img-responsive" alt="">
+      </a>
+      <a href="{{ usersShowPath photo.owner.id }}">
+        <p class="uploaded-by">Uploaded by {{ photo.owner.email }}</p>
+      </a>
+    </div>
+    {{/each }}
+  {{else }}
+    <h2>No photos yet :(</h2>
+  {{/if }}
+</div>
