@@ -1,0 +1,13 @@
+{
+  "development": {
+    "database": "s3_gallery_development",
+    "host": "localhost"
+  },
+  "test": {
+    "database": "s3_gallery_test",
+    "host": "localhost"
+  },
+  "production": {
+    "use_env_variable": "MONGO_URL"
+  }
+}
