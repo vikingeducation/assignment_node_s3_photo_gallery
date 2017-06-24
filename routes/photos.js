@@ -21,25 +21,14 @@ router.use((req, res, next) => {
 // ----------------------------------------
 // Index
 // ----------------------------------------
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Photo.find()
     .populate("owner")
     .sort([["createdAt", "descending"]])
     .then(photos => {
       res.render("photos/index", { user: req.user, photos });
     })
-    .catch(e => {
-      if (e.errors) {
-        let errors = Object.keys(e.errors);
-
-        errors.forEach(error => {
-          req.flash("error", e.errors[error].message);
-        });
-        res.redirect("back");
-      } else {
-        res.status(500).send(e.stack);
-      }
-    });
+    .catch(next);
 });
 
 // ----------------------------------------
@@ -52,7 +41,7 @@ router.get("/new", (req, res) => {
 // ----------------------------------------
 // Show
 // ----------------------------------------
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   let mainPhoto;
   let relatedPhotos;
   Photo.findById(req.params.id)
@@ -65,7 +54,8 @@ router.get("/:id", (req, res) => {
     .then(results => {
       relatedPhotos = results;
       res.render("photos/show", { user: req.user, mainPhoto, relatedPhotos });
-    });
+    })
+    .catch(next);
 });
 
 // ----------------------------------------
@@ -105,25 +95,32 @@ router.post("/", mw, (req, res, next) => {
 // ----------------------------------------
 router.delete("/:id", (req, res, next) => {
   let foundPhoto;
+  let canDelete;
   Photo.find({ name: req.params.id })
     .then(photo => {
       foundPhoto = photo;
       if (photo[0].owner.toString() === req.user.id.toString()) {
+        canDelete = true;
         return FileUpload.remove(req.params.id);
       } else {
         req.flash(
           "error",
           "Error: You do not have permission to delete that photo."
         );
+        canDelete = false;
       }
     })
     .then(() => {
-      return Photo.remove({ name: req.params.id });
+      if (canDelete) {
+        return Photo.remove({ name: req.params.id });
+      }
     })
     .then(() => {
-      return User.findByIdAndUpdate(req.user.id, {
-        $pull: { photos: foundPhoto.id }
-      });
+      if (canDelete) {
+        return User.findByIdAndUpdate(req.user.id, {
+          $pull: { photos: foundPhoto.id }
+        });
+      }
     })
     .then(() => {
       res.redirect("/photos");
