@@ -1,0 +1,38 @@
+.navbar a {
+  color: white;
+}
+
+.navbar {
+  border-radius: 0px;
+  margin-bottom: 0px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+img {
+  border-radius: 5px;
+  border: solid 2px #444;
+}
+
+p.uploaded-by {
+  text-align: center;
+}
+
+.related-photos {
+  margin-top: 2em;
+  border-top: solid 2px #444;
+}
+
+main {
+  padding-bottom: 4em;
+}
+
+.photo-index {
+  margin-top: 2em;
+}
+
+.btn-danger {
+  margin-top: .5em;
+}

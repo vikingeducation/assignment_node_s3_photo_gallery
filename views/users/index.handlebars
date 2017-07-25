@@ -1,0 +1,23 @@
+<div class="row">
+  <h1>All Users</h1>
+  <table class="table table-striped">
+    <thead>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+    </thead>
+    <tbody>
+      {{#each users as |eachUser| }}
+        <tr>
+          <td>{{ eachUser.fname }}</td>
+          <td>{{ eachUser.lname }}</td>
+          <td>
+            <a href="{{ usersShowPath eachUser.id }}">
+              {{ eachUser.email }}
+            </a>
+          </td>
+        </tr>
+      {{/each }}
+    </tbody>
+  </table>
+</div>
