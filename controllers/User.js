@@ -15,4 +15,12 @@ const addUser = async data => {
   }
 };
 
-module.exports = { addUser };
+const addUserPhoto = async (url, id) => {
+  try {
+    return await User.update({ _id: id }, { $push: { photos: url } });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { addUser, addUserPhoto };

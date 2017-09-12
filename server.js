@@ -9,7 +9,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const { DB_URL } = process.env;
 const db = require("./config")(DB_URL);
-const { addUser } = require("./controllers/User");
+const { addUser, addUserPhoto } = require("./controllers/User");
 const expressSession = require("express-session");
 app.use(
   expressSession({
@@ -18,6 +18,16 @@ app.use(
     resave: false
   })
 );
+
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+
+const { local, serializeUser, deserializeUser } = require("./strategies");
+
+passport.use(local);
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 const exphbs = require("express-handlebars");
@@ -35,15 +45,27 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
 app.post("/register", async (req, res) => {
-  let user = await addUser(req.body);
+  const { firstName, lastName, password, email } = req.body;
+  let user = await addUser({
+    fname: firstName,
+    lname: lastName,
+    email: email,
+    password: password,
+    photos: []
+  });
   if (user) {
-    res.session.user = user;
-    res.redirect("/photos");
+    res.redirect("/login");
   }
 });
 
-app.post("/photos", upload.single("photo"), (req, res, next) => {
+app.get("");
+
+app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
   var params = {
     Bucket: process.env.AWS_S3_BUCKET,
     Key: "test_file",
@@ -53,6 +75,13 @@ app.post("/photos", upload.single("photo"), (req, res, next) => {
   s3.upload(params, function(err, data) {
     console.log(err, data);
   });
+
+  try {
+    const photo = await addUserPhoto(data.location, req.user._id);
+  } catch (err) {
+    console.log(err);
+  }
+
   res.redirect("back");
 });
 
