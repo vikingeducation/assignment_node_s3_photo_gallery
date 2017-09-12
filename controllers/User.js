@@ -16,9 +16,9 @@ const addUser = async data => {
   }
 };
 
-const addUserPhoto = async (url, id) => {
+const addUserPhoto = async (userId, photoId) => {
   try {
-    return await User.update({ _id: id }, { $push: { photos: url } });
+    return await User.update({ _id: userId }, { $push: { photos: photoId } });
   } catch (err) {
     console.log(err);
   }

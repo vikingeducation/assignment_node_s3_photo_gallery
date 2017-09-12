@@ -9,7 +9,12 @@ const UserSchema = new Schema(
     lname: String,
     email: { type: String, required: true, unique: true },
     passwordHash: { type: String, required: true },
-    photos: []
+    photos: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Photo"
+      }
+    ]
   },
   {
     timestamps: true

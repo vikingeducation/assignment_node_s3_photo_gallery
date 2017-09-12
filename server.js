@@ -10,6 +10,7 @@ const upload = multer({ storage });
 const { DB_URL } = process.env;
 const db = require("./config")(DB_URL);
 const { addUser, addUserPhoto } = require("./controllers/User");
+const { addPhoto } = require("./controllers/Photo");
 const expressSession = require("express-session");
 app.use(
   expressSession({
@@ -84,17 +85,17 @@ app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
     Body: req.file.buffer
   };
 
-  s3.upload(params, function(err, data) {
-    console.log(err, data);
-  });
-
   try {
-    const photo = await addUserPhoto(data.location, req.user._id);
+    s3.upload(params, async function(err, data) {
+      console.log("data: ", data);
+      const photo = await addPhoto(data.Location, data.key, req.user._id);
+      await addUserPhoto(req.user._id, photo._id);
+    });
   } catch (err) {
     console.log(err);
   }
 
-  res.redirect("back");
+  return res.redirect("/");
 });
 
 app.listen(3000, "0.0.0.0", (req, res) => {
