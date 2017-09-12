@@ -29,7 +29,7 @@
         <span class="h1">Upload New Photo</span>
       <hr>
 
-      <form method="POST" action="/photos/upload">
+      <form method="POST" action="/photos/upload" enctype="multipart/form-data">
         <div class="form-group">
           <label for="upload-file">File to upload</label>
           <input type="file" class="form-control-file" id="upload-file" name="file" aria-describedby="fileHelp">
