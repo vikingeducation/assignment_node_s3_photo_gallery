@@ -1,35 +1,34 @@
-const router = require("koa-router")();
+const User = require('../models/User');
 
-router.get("/", async ctx => {
-  await ctx.render("login", {
-    title: "Hello Koa 2!"
-  });
+const router = require('koa-router')();
+
+router.get('/', async ctx => {
+	await ctx.render('login', {
+		title: 'Hello Koa 2!'
+	});
 });
 
-router.get("/register", async ctx => {
-  await ctx.render("register", {
-    layout: "layout"
-  });
+router.get('/register', async ctx => {
+	await ctx.render('register');
 });
 
-router.post("/register", async ctx => {
-  console.log("ctx ", ctx);
-  ctx.status = 200;
-  await ctx.redirect("/");
+router.post('/register', async (ctx, next) => {
+	const formData = {
+		username: ctx.request.body.username,
+		password: ctx.request.body.password
+	};
+
+	try {
+		const user = await User.create(formData);
+	} catch (err) {
+		await next(err);
+	}
+
+	await ctx.redirect('/register');
 });
 
-router.post("/login", async ctx => {
-  // TODO: Implement this
+router.post('/login', async ctx => {
+	// TODO: Implement this
 });
-
-// router.get('/string', async (ctx, next) => {
-//   ctx.body = 'koa2 string'
-// })
-//
-// router.get('/json', async (ctx, next) => {
-//   ctx.body = {
-//     title: 'koa2 json'
-//   }
-// })
 
 module.exports = router;
