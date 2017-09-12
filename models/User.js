@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   first_name: {
@@ -17,25 +17,27 @@ const UserSchema = new Schema({
     required: true,
     unique: true
   },
-  hashed_password: {
+  hashedPassword: {
     type: String,
-    required: true,
     unique: true
   },
-  photos: [{
-    type: Schema.Types.ObjectId,
-    ref: "Photo"
-  }]
+  photos: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Photo"
+    }
+  ]
 });
 
 UserSchema.plugin(uniqueValidator);
 
-UserSchema.virtual("password").set(value => {
+UserSchema.virtual("password").set(function(value) {
   this.hashedPassword = bcrypt.hashSync(value, 12);
 });
 
-UserSchema.methods.validatePassword = password => {
-  return bcrypt.compareSync(password, this.passwordHash);
+UserSchema.methods.validatePassword = function(password) {
+  console.log("entered function");
+  return bcrypt.compareSync(password, this.hashedPassword);
 };
 
 module.exports = mongoose.model("User", UserSchema);

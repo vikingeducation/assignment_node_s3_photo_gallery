@@ -1,3 +1,5 @@
+const User = require("../models/User");
+
 const localStrategy = (username, password, done) => {
   User.findOne({
     email: username
