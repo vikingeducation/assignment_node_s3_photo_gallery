@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
+const Schema = mongoose.Schema
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   first_name: {
     type: String,
     required: true
@@ -21,7 +22,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  photos: []
+  photos: [{
+    type: Schema.Types.ObjectId,
+    ref: "Photo"
+  }]
 });
 
 UserSchema.plugin(uniqueValidator);

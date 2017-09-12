@@ -20,7 +20,9 @@ var hbs = expressHandlebars.create({
   defaultLayout: "application"
 });
 app.engine("handlebars", hbs.engine);
+app.set('views', __dirname+'/views');
 app.set("view engine", "handlebars");
+
 
 app.use((req, res, next) => {
   if (mongoose.connection.readyState) {
@@ -43,7 +45,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 const localStrategy = require("./strategies/local");
-passport.use(new LocalStrategy(localStrategy));
+passport.use('local', new LocalStrategy(localStrategy));
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -80,8 +82,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("/users/login");
+  res.render("users/login");
 });
+
+app.post('/login', 
+  passport.authenticate('local', {
+    successRedirect: "/photos",
+    failureRedirect: "/login"
+  })
+);
 
 app.get("/photos", loggedIn, (req, res) => {
   res.render("photos/index");
@@ -101,6 +110,10 @@ app.post("/photos/new", loggedIn, mw, (req, res) => {
   });
 });
 
+
+
+
+
 var port = process.env.PORT || process.argv[2] || 3000;
 var host = "localhost";
 var args;
@@ -108,6 +121,16 @@ process.env.NODE_ENV === "production" ? (args = [port]) : (args = [port, host]);
 args.push(() => {
   console.log(`Listening: http://${host}:${port}`);
 });
-app.listen.apply(app, args);
+
+User.create({
+  first_name: 'a',
+  last_name: 'a',
+  email: 'a',
+  password: 'a'
+})
+.then(()=>{
+  console.log("listening")
+  app.listen.apply(app, args);})
+.catch(e=>{console.error(e)})
 
 module.exports = app;
