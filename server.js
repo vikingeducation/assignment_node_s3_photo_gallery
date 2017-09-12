@@ -9,10 +9,17 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const { DB_URL } = process.env;
 const db = require("./config")(DB_URL);
-const { addUser, addUserPhoto } = require("./controllers/User");
+const {
+  addUser,
+  addUserPhoto,
+  getUserPhotos,
+  getUsers
+} = require("./controllers/User");
 const { addPhoto, getPhotos } = require("./controllers/Photo");
 const expressSession = require("express-session");
 const shortId = require("shortid");
+
+const { loggedInOnly, loggedOutOnly } = require("./middleware");
 
 app.use(
   expressSession({
@@ -44,16 +51,17 @@ app.engine(
 
 app.set("view engine", "handlebars");
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const photos = await getPhotos();
+  const users = await getUsers();
+  res.render("photos", { photos, users });
+});
+
+app.get("/upload", loggedInOnly, (req, res) => {
   res.render("index");
 });
 
-app.get("/photos", async (req, res) => {
-  const photos = await getPhotos();
-  res.render("photos", { photos });
-});
-
-app.get("/register", (req, res) => {
+app.get("/register", loggedOutOnly, (req, res) => {
   res.render("register");
 });
 
@@ -71,7 +79,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", loggedOutOnly, (req, res) => {
   res.render("login");
 });
 
@@ -97,12 +105,21 @@ app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
     s3.upload(params, async function(err, data) {
       const photo = await addPhoto(data.Location, data.key, req.user._id);
       await addUserPhoto(req.user._id, photo._id);
+      return res.redirect("/");
     });
   } catch (err) {
     console.log(err);
   }
+});
 
-  return res.redirect("/photos");
+app.get("/users/:id", async (req, res) => {
+  console.log("id: ", req.params.id);
+  try {
+    const user = await getUserPhotos(req.params.id);
+    return res.render("photos", { user: user, photos: user.photos });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(3000, "0.0.0.0", (req, res) => {

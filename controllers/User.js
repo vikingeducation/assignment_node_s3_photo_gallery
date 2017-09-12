@@ -24,4 +24,20 @@ const addUserPhoto = async (userId, photoId) => {
   }
 };
 
-module.exports = { addUser, addUserPhoto };
+const getUserPhotos = async userId => {
+  try {
+    return await User.findById(userId).populate("photos");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getUsers = async () => {
+  try {
+    return await User.find();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { addUser, addUserPhoto, getUserPhotos, getUsers };

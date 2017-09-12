@@ -1,4 +1,18 @@
-<h1>PHOTOS</h1>
+<h1>{{#if user}} {{user.fname}} {{user.lname}} {{/if}} PHOTOS  </h1>
+
+<div class="row">
+  <div class="col-xs-3 col-xs-offset-3">
+  <ul class="list-group">
+    {{#each users as |user|}}
+    <li class="list-group-item">
+      <a href="users/{{user._id}}">{{user.fname}} {{user.lname}}</a>
+    </li>
+  </ul>
+    {{/each}}
+
+  </div>
+</div>
+
 
 <div class='row'>
   {{#each photos as |photo|}}
