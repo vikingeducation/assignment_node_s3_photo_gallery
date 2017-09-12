@@ -12,15 +12,22 @@ const params = {
 };
 
 // params.Body = fs.readFileSync("./aws-logo.svg");
-const upload = async (filename, data) => {
+const s3Upload = (filename, data) => {
 	params.Key = filename;
 	params.Body = data;
-	try {
-		return s3.upload(params);
-	} catch (e) {
-		console.error(e);
-		return e;
-	}
+
+	return s3.upload(params);
 };
 
-module.exports = upload;
+const s3Delete = key => {
+	var params = {
+		Bucket: process.env.AWS_S3_BUCKET /* required */,
+		Key: key /* required */
+	};
+	return s3.deleteObject(params);
+};
+
+module.exports = {
+	s3Upload,
+	s3Delete
+};

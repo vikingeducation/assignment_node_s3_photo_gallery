@@ -3,11 +3,11 @@ const router = require('koa-router')();
 const passport = require('koa-passport');
 
 router.get('/', async ctx => {
-	// if (!ctx.isAuthenticated()) {
-	// 	return await ctx.render('login', {
-	// 		title: 'Hello Koa 2!'
-	// 	});
-	// }
+	if (!ctx.isAuthenticated()) {
+		return await ctx.render('login', {
+			title: 'Hello Koa 2!'
+		});
+	}
 	await ctx.render('home', { user: ctx.state.user });
 });
 

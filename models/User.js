@@ -1,30 +1,33 @@
-const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const UserSchema = new mongoose.Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    password: String,
-    photos: [
-      {
-        key: String,
-        filename: String,
-        description: String,
-        url: String
-      }
-    ]
-  },
-  {
-    timestamps: true
-  }
+	{
+		username: {
+			type: String,
+			required: true
+		},
+		password: String,
+		photos: [
+			{
+				key: {
+					type: String
+				},
+				filename: String,
+				description: String,
+				url: String
+			}
+		]
+	},
+	{
+		timestamps: true
+	}
 );
 
-UserSchema.methods.getPhoto = key =>
-  this.photos.find(photo => photo.key === key);
+UserSchema.plugin(uniqueValidator);
 
-const User = mongoose.model("User", UserSchema);
+UserSchema.methods.getPhoto = key =>
+	this.photos.find(photo => photo.key === key);
+
+const User = mongoose.model('User', UserSchema);
 module.exports = User;
