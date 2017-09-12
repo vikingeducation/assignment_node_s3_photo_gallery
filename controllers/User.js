@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 
 const addUser = async data => {
-  const { fname, lname, email } = data;
+  const { fname, lname, email, password } = data;
   const user = new User({
     fname,
     lname,
-    email
+    email,
+    password
   });
   try {
     return await user.save();

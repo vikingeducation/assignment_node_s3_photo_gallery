@@ -50,12 +50,12 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { firstName, lastName, password, email } = req.body;
+  const { fname, lname, password, email } = req.body;
   let user = await addUser({
-    fname: firstName,
-    lname: lastName,
-    email: email,
-    password: password,
+    fname,
+    lname,
+    email,
+    password,
     photos: []
   });
   if (user) {
@@ -63,7 +63,19 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("");
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/login"
+  }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
 
 app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
   var params = {

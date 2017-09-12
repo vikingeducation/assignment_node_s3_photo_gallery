@@ -1,10 +1,11 @@
 const LocalStrategy = require("passport-local");
-const { User } = require("../models/User");
+const User = require("../models/User");
 
 module.exports = {
-  local: new LocalStrategy(async function(email, password, done) {
+  local: new LocalStrategy(async function(username, password, done) {
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findOne({ email: username });
+      console.log(user);
       if (!user)
         throw new Error("Error: No User by that email in the database");
 
