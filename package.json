@@ -1,0 +1,19 @@
+{
+  "name": "assignment_node_s3_photo_gallery",
+  "version": "1.0.0",
+  "description": "photo gallery app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Avonyel/assignment_node_s3_photo_gallery.git"
+  },
+  "author": "Will and Stephanie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Avonyel/assignment_node_s3_photo_gallery/issues"
+  },
+  "homepage": "https://github.com/Avonyel/assignment_node_s3_photo_gallery#readme"
+}
