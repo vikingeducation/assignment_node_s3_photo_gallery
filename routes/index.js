@@ -5,7 +5,9 @@ const { User } = require("../models");
 
 //main page
 router.get("/", (req, res) => {
-  res.render("index");
+  req.session.user
+    ? res.render("index", { user: req.session.user })
+    : res.redirect("/login");
 });
 
 //login view
@@ -36,8 +38,11 @@ router.get(h.registerPath(), (req, res) => {
 //register handler
 router.post(h.registerPath(), async (req, res, next) => {
   try {
-    const user = await User.registerNewUser(req.body.username);
+    console.log("Hit the route");
+    const user = await User.create({ username: req.body.username });
+    console.log("Created a user...");
     req.session.user = user;
+    console.log;
     res.redirect("/");
   } catch (error) {
     next(error);
@@ -46,13 +51,14 @@ router.post(h.registerPath(), async (req, res, next) => {
 
 //logout handler
 router.get(h.logoutPath(), function(req, res) {
-  req.session.user = {};
+  req.session.user = null;
   res.redirect("/");
 });
 
-router.use((err, res, req, next) => {
+router.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).end(err.stack);
+  req.flash("error", `${err.message}`);
+  res.redirect("/");
 });
 
 module.exports = router;
