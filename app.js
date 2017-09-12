@@ -16,10 +16,31 @@ var hbs = expressHandlebars.create({
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
-const uploadService = require("./cloudifyAllTheThingsLikePhotosInThisCaseSinceThatsWhatWeWantToDisplayInOurApp");
+const {
+  FileUploader,
+  mw
+} = require("./cloudifyAllTheThingsLikePhotosInThisCaseSinceThatsWhatWeWantToDisplayInOurApp");
 
 app.get("/", (req, res) => {
-  res.send("hi");
+  res.redirect("/photos");
+});
+
+app.get("/photos", (req, res) => {
+  res.render("photos/index");
+});
+
+app.get("/photos/new", (req, res) => {
+  res.render("photos/new");
+});
+
+app.post("/photos/new", mw, (req, res) => {
+  FileUploader.upload({
+    data: req.file.buffer,
+    name: req.file.originalname,
+    mimetype: req.file.mimetype
+  }).then(data => {
+    res.redirect("/photos");
+  });
 });
 
 var port = process.env.PORT || process.argv[2] || 3000;
