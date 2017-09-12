@@ -13,11 +13,15 @@ const upload = multer({ storage });
 
 const FileUploader = {};
 
-FileUploader.single = field => upload.single(field);
+FileUploader.single = field => {
+  console.log("Field is: ", field);
+  return upload.single(field);
+};
 
 FileUploader.upload = async (file, user) => {
   // Use the mime library to get the correct
   // extension for the mimetype
+  console.log("In the uploader function!");
   const extension = mime.extension(file.mimetype);
 
   // Use the path library to get a consistent
@@ -34,9 +38,10 @@ FileUploader.upload = async (file, user) => {
     Key: `${filename}-${md5(Date.now())}.${extension}`,
     Body: file.data
   };
-
+  console.log("now to upload the file...");
   // Upload the file
   const data = await s3.upload(options);
+  console.log("Data: ", data);
   const photo = await Photo.create({
     url: data.Location,
     name: data.key,

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const h = require("../helpers");
 const { User } = require("../models");
+const FileUpload = require("../services/file_upload");
 
 //main page
 router.get("/", (req, res) => {
@@ -58,21 +59,24 @@ router.get(h.logoutPath(), function(req, res) {
 // ----------------------------------------
 // Create
 // ----------------------------------------
-const mw = FileUpload.single("photo[file]");
-router.post("/photos", mw, (req, res, next) => {
-  console.log("Files", req.file);
+const mw = FileUpload.single("photo");
 
-  FileUpload.upload({
-    data: req.file.buffer,
-    name: req.file.originalname,
-    mimetype: req.file.mimetype
-  })
-    .then(data => {
-      console.log(data);
-      req.flash("success", "Photo created!");
-      res.redirect("/photos");
-    })
-    .catch(next);
+router.post("/photos", mw, async (req, res, next) => {
+  try {
+    const data = await FileUpload.upload(
+      {
+        data: req.file.buffer,
+        name: req.file.originalname,
+        mimetype: req.file.mimetype
+      },
+      req.session.user
+    );
+    console.log(data);
+    req.flash("success", "Photo created!");
+    res.redirect("/");
+  } catch (err) {
+    next(err);
+  }
 });
 
 // ----------------------------------------
