@@ -8,13 +8,11 @@ const FileUpload = require("../services/file_upload");
 router.get("/", async (req, res, next) => {
   try {
     const user = req.session.user;
-    console.log("User: ", req.session.user);
 
     let photos = await Photo.find().populate("user");
     photos = !user
       ? photos
       : photos.map(photo => {
-          console.log("single photo: ", photo);
           photo.currentUser = photo.user.id === user._id;
           return photo;
         });
@@ -46,12 +44,12 @@ router.post("/login", async (req, res, next) => {
 });
 
 //register view
-router.get(h.registerPath(), (req, res) => {
+router.get("/register", (req, res) => {
   res.render("register");
 });
 
 //register handler
-router.post(h.registerPath(), async (req, res, next) => {
+router.post("register", async (req, res, next) => {
   try {
     const user = await User.create({ username: req.body.username });
     req.session.user = user;
@@ -62,16 +60,13 @@ router.post(h.registerPath(), async (req, res, next) => {
 });
 
 //logout handler
-router.get(h.logoutPath(), function(req, res) {
+router.get("/logout", function(req, res) {
   req.session.user = null;
   res.redirect("/");
 });
 
-// ----------------------------------------
 // Create
-// ----------------------------------------
 const mw = FileUpload.single("photo");
-
 router.post("/photos", mw, async (req, res, next) => {
   try {
     const user = await FileUpload.upload(
@@ -82,7 +77,6 @@ router.post("/photos", mw, async (req, res, next) => {
       },
       req.session.user
     );
-    req.session.user = user ? user : req.session.user;
     req.flash("success", "Photo created!");
     res.redirect("/");
   } catch (err) {
@@ -90,9 +84,7 @@ router.post("/photos", mw, async (req, res, next) => {
   }
 });
 
-// ----------------------------------------
 // Destroy
-// ----------------------------------------
 router.delete("/photos/:id", async (req, res, next) => {
   const photo = await Photo.findById(req.params.id);
   await FileUpload.remove(photo.name);

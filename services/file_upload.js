@@ -18,24 +18,14 @@ FileUploader.single = field => {
 };
 
 FileUploader.upload = async (file, user) => {
-  // Use the mime library to get the correct
-  // extension for the mimetype
   const extension = mime.extension(file.mimetype);
-
-  // Use the path library to get a consistent
-  // file name
   const filename = path.parse(file.name).name;
-
-  // Configure the S3 request options
   const options = {
     Bucket: bucket,
-
-    // Use the md5 library to create a unique
-    // hash for this file name and attach
-    // the extension
     Key: `${filename}-${md5(Date.now())}.${extension}`,
     Body: file.data
   };
+
   // Upload the file
   const data = await s3.upload(options).promise();
   const photo = await Photo.create({
@@ -48,16 +38,13 @@ FileUploader.upload = async (file, user) => {
 };
 
 FileUploader.remove = async name => {
-  // Configure the request
   const options = {
     Bucket: bucket,
     Key: name
   };
 
-  console.log("Options: ", options);
-  const data = await s3.deleteObject(options).promise();
-  console.log("Data: ", data);
-  const photo = await Photo.remove({ name });
+  await s3.deleteObject(options).promise();
+  await Photo.remove({ name });
 };
 
 module.exports = FileUploader;
