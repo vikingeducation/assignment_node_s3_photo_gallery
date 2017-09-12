@@ -1,0 +1,15 @@
+<ul>
+  {{#each children as |child|}}
+  <li>
+
+    <button class="btn btn-success btn-sm">
+      ${{ child.contribution }}
+    </button>
+    <strong class="lead">
+      {{ child.username }}
+    </strong>
+    <em>Ponzverted on {{ child.prettyDate }}</em> {{#if child.children }} {{> shared/_children children=child.children}}
+    {{/if}}
+  </li>
+  {{/each}}
+</ul>

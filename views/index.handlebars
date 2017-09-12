@@ -1,0 +1,56 @@
+<section class="col-xs-12">
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2>Welcome {{user.username}}</h2>
+    </div>
+    <div class="panel-body">
+      <h3>
+        Your referral link is <a href="{{ referralUrl }}">{{ referralUrl }}</a>
+      </h3>
+    </div>
+  </div>
+
+</section>
+
+<section class="col-xs-12">
+
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <h2>Ponz Points<sup>TM</sup> ${{user.earnings}}</h2>
+
+    </div>
+  </div>
+
+</section>
+
+<section class="col-xs-12">
+
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h2>Your Ponzverts</h2>
+    </div>
+    <div class="panel-body">
+      {{#if user.children }} {{> shared/_children children=user.children}} {{else}}
+      <h3>You have no ponzverts. SAD!</h3>
+      {{/if}}
+    </div>
+  </div>
+
+</section>
+
+{{#if pyramid}}
+<section class="col-xs-12">
+
+
+<div id="pyramid" class="row">
+  <div id="triangle-left"></div>
+  <div id="triangle-right"></div>
+  {{#each pyramid as |p|}}
+  <div class="col-xs-12 pyramid-row">
+    {{p}}
+  </div>
+  {{/each}}
+</div>
+</section>
+{{/if}}
