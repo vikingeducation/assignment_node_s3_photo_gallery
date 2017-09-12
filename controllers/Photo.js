@@ -15,4 +15,9 @@ const addPhoto = async (url, filename, userId) => {
   }
 };
 
-module.exports = { addPhoto };
+const getPhotos = async () => {
+  const photos = await Photo.find().populate("user");
+  return photos;
+};
+
+module.exports = { addPhoto, getPhotos };

@@ -1,0 +1,15 @@
+<h1>PHOTOS</h1>
+
+<div class='row'>
+  {{#each photos as |photo|}}
+    <div class='col-xs-3'>
+      <div class="card" style="width: 20rem;">
+        <img class="card-img-top img-fluid" src={{photo.url}} alt="Card image cap">
+        <div class="card-block">
+          <h4 class="card-title">{{photo.user.email}}</h4>
+          <p class="card-text">{{photo.filename}}</p>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

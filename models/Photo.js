@@ -7,7 +7,7 @@ const PhotoSchema = new Schema(
     filename: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: "User" }
   },
-  { timesstamps: true }
+  { timestamps: true }
 );
 
 const Photo = mongoose.model("Photo", PhotoSchema);

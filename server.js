@@ -10,8 +10,10 @@ const upload = multer({ storage });
 const { DB_URL } = process.env;
 const db = require("./config")(DB_URL);
 const { addUser, addUserPhoto } = require("./controllers/User");
-const { addPhoto } = require("./controllers/Photo");
+const { addPhoto, getPhotos } = require("./controllers/Photo");
 const expressSession = require("express-session");
+const shortId = require("shortid");
+
 app.use(
   expressSession({
     secret: "keyboard cat",
@@ -44,6 +46,11 @@ app.set("view engine", "handlebars");
 
 app.get("/", (req, res) => {
   res.render("index");
+});
+
+app.get("/photos", async (req, res) => {
+  const photos = await getPhotos();
+  res.render("photos", { photos });
 });
 
 app.get("/register", (req, res) => {
@@ -79,15 +86,15 @@ app.post(
 );
 
 app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
-  var params = {
+  const key = shortId.generate();
+  const params = {
     Bucket: process.env.AWS_S3_BUCKET,
-    Key: "test_file",
+    Key: key,
     Body: req.file.buffer
   };
 
   try {
     s3.upload(params, async function(err, data) {
-      console.log("data: ", data);
       const photo = await addPhoto(data.Location, data.key, req.user._id);
       await addUserPhoto(req.user._id, photo._id);
     });
@@ -95,7 +102,7 @@ app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
     console.log(err);
   }
 
-  return res.redirect("/");
+  return res.redirect("/photos");
 });
 
 app.listen(3000, "0.0.0.0", (req, res) => {
