@@ -47,16 +47,17 @@ FileUploader.upload = async (file, user) => {
   return User.update({ _id: user._id }, { $push: { photos: photo } });
 };
 
-FileUploader.remove = async id => {
+FileUploader.remove = async name => {
   // Configure the request
   const options = {
     Bucket: bucket,
-    Key: id
+    Key: name
   };
 
+  console.log("Options: ", options);
   const data = await s3.deleteObject(options).promise();
-  const photo = await Photo.remove({ name: id });
-  return photo;
+  console.log("Data: ", data);
+  const photo = await Photo.remove({ name });
 };
 
 module.exports = FileUploader;

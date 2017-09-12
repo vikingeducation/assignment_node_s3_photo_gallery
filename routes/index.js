@@ -8,12 +8,16 @@ const FileUpload = require("../services/file_upload");
 router.get("/", async (req, res, next) => {
   try {
     const user = req.session.user;
+    console.log("User: ", req.session.user);
 
-    let photos = await Photo.find().populate("User");
-    photos = photos.map(photo => {
-      photo.currentUser = photo.User._id === user._id;
-      return photo;
-    });
+    let photos = await Photo.find().populate("user");
+    photos = !user
+      ? photos
+      : photos.map(photo => {
+          console.log("single photo: ", photo);
+          photo.currentUser = photo.user.id === user._id;
+          return photo;
+        });
 
     user ? res.render("index", { user, photos }) : res.redirect("/login");
   } catch (error) {
@@ -89,12 +93,14 @@ router.post("/photos", mw, async (req, res, next) => {
 // ----------------------------------------
 // Destroy
 // ----------------------------------------
-router.delete("/photos/:id", (req, res, next) => {
-  FileUpload.remove(req.params.id)
-    .then(() => {
-      res.redirect("/photos");
-    })
-    .catch(next);
+router.delete("/photos/:id", async (req, res, next) => {
+  const photo = await Photo.findById(req.params.id);
+  await FileUpload.remove(photo.name);
+  try {
+    res.redirect("/");
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.use((err, req, res, next) => {

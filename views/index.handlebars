@@ -17,18 +17,19 @@
 
 </section>
 
-<section>
+<section class="col-xs-4">
   {{#each photos as |photo|}}
+    {{log photo}}
     <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h4>{{photo.User.name}}</h4>
+      <div class="panel-heading">
+        <h4>{{photo.user.username}}</h4>
+      </div>
+      <div class="panel-body">
+        <img src="{{photo.url}}" class="img-thumbnail" alt="">
+        {{#if photo.currentUser}}
+          <a class="btn btn-danger" href="/photos/{{photo.id}}?_method=delete">Delete</a>
+        {{/if}}
+      </div>
     </div>
-    <div class="panel-body">
-      <img src="{{photo.url}}" alt="">
-      {{#if photo.currentUser}}
-      <a clas="btn btn-danger" href="/photos/{{photo.id}}?method=delete">delete</a>
-      {{/if}}
-    </div>
-  </div>
   {{/each}}
 </section>
