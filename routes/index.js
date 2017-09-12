@@ -55,6 +55,37 @@ router.get(h.logoutPath(), function(req, res) {
   res.redirect("/");
 });
 
+// ----------------------------------------
+// Create
+// ----------------------------------------
+const mw = FileUpload.single("photo[file]");
+router.post("/photos", mw, (req, res, next) => {
+  console.log("Files", req.file);
+
+  FileUpload.upload({
+    data: req.file.buffer,
+    name: req.file.originalname,
+    mimetype: req.file.mimetype
+  })
+    .then(data => {
+      console.log(data);
+      req.flash("success", "Photo created!");
+      res.redirect("/photos");
+    })
+    .catch(next);
+});
+
+// ----------------------------------------
+// Destroy
+// ----------------------------------------
+router.delete("/photos/:id", (req, res, next) => {
+  FileUpload.remove(req.params.id)
+    .then(() => {
+      res.redirect("/photos");
+    })
+    .catch(next);
+});
+
 router.use((err, req, res, next) => {
   console.error(err.stack);
   req.flash("error", `${err.message}`);
