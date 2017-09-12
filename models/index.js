@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
 module.exports = {
-  User: require("./User")
+  User: require("./User"),
+  Photo: require("./Photo")
 };
