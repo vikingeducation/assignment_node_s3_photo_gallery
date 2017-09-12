@@ -113,10 +113,13 @@ app.post("/photos/new", upload.single("photo"), async (req, res, next) => {
 });
 
 app.get("/users/:id", async (req, res) => {
-  console.log("id: ", req.params.id);
+  let showable;
+  if (req.user && req.user.id === req.params.id) {
+    showable = true;
+  }
   try {
     const user = await getUserPhotos(req.params.id);
-    return res.render("photos", { user: user, photos: user.photos });
+    return res.render("photos", { user: user, photos: user.photos, showable });
   } catch (err) {
     console.log(err);
   }

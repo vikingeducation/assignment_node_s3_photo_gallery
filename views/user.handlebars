@@ -1,28 +1,22 @@
 <h1>{{#if user}} {{user.fname}} {{user.lname}} {{user.email}} {{/if}}</h1>
 
-<div class="row">
-  <div class="col-xs-3 col-xs-offset-3">
-  <ul class="list-group">
-    {{#each users as |user|}}
-    <li class="list-group-item">
-      <a href="users/{{user._id}}">{{user.fname}} {{user.lname}}</a>
-    </li>
-  </ul>
-    {{/each}}
-
-  </div>
-</div>
-
 <div class='row'>
-  {{#each photos as |photo|}}
     <div class='col-xs-3'>
+      {{#each photos as |photo|}}
       <div class="card" style="width: 20rem;">
         <img class="card-img-top img-fluid" src={{photo.url}} alt="Card image cap">
         <div class="card-block">
           <h4 class="card-title">{{photo.user.email}}</h4>
           <p class="card-text">{{photo.filename}}</p>
         </div>
+
       </div>
+      {{/each}}
+      {{#if showable}}
+      <form action='/photos/delete' method='post'>
+        <input type='hidden' name='id' value={{photo._id}} />
+        <button type=submit class='btn btn-danger'>Delete Photo</button>
+      </form>
+      {{/if}}
     </div>
-  {{/each}}
 </div>
