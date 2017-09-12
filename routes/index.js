@@ -1,21 +1,25 @@
-const router = require('koa-router')();
+const router = require("koa-router")();
 
-router.get('/', async ctx => {
-	await ctx.render('login', {
-		title: 'Hello Koa 2!'
-	});
+router.get("/", async ctx => {
+  await ctx.render("login", {
+    title: "Hello Koa 2!"
+  });
 });
 
-router.get('/register', async ctx => {
-	await ctx.render('register', {
-		layout: 'layout'
-	});
+router.get("/register", async ctx => {
+  await ctx.render("register", {
+    layout: "layout"
+  });
 });
 
-router.post('/register');
+router.post("/register", async ctx => {
+  console.log("ctx ", ctx);
+  ctx.status = 200;
+  await ctx.redirect("/");
+});
 
-router.post('/login', async ctx => {
-	// TODO: Implement this
+router.post("/login", async ctx => {
+  // TODO: Implement this
 });
 
 // router.get('/string', async (ctx, next) => {
