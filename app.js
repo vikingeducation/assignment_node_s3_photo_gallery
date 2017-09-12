@@ -80,7 +80,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("/users/login");
+  res.render("users/login");
 });
 
 app.get("/photos", loggedIn, (req, res) => {
