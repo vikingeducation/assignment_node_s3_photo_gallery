@@ -1,14 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const h = require("../helpers");
-const { User } = require("../models");
+const { User, Photo } = require("../models");
 const FileUpload = require("../services/file_upload");
 
 //main page
-router.get("/", (req, res) => {
-  req.session.user
-    ? res.render("index", { user: req.session.user })
-    : res.redirect("/login");
+router.get("/", async (req, res, next) => {
+  try {
+    const user = req.session.user;
+
+    let photos = await Photo.find().populate("User");
+    photos = photos.map(photo => {
+      photo.currentUser = photo.User._id === user._id;
+      return photo;
+    });
+
+    user ? res.render("index", { user, photos }) : res.redirect("/login");
+  } catch (error) {
+    next(error);
+  }
 });
 
 //login view
@@ -39,11 +49,8 @@ router.get(h.registerPath(), (req, res) => {
 //register handler
 router.post(h.registerPath(), async (req, res, next) => {
   try {
-    console.log("Hit the route");
     const user = await User.create({ username: req.body.username });
-    console.log("Created a user...");
     req.session.user = user;
-    console.log;
     res.redirect("/");
   } catch (error) {
     next(error);
@@ -63,7 +70,7 @@ const mw = FileUpload.single("photo");
 
 router.post("/photos", mw, async (req, res, next) => {
   try {
-    const data = await FileUpload.upload(
+    const user = await FileUpload.upload(
       {
         data: req.file.buffer,
         name: req.file.originalname,
@@ -71,7 +78,7 @@ router.post("/photos", mw, async (req, res, next) => {
       },
       req.session.user
     );
-    console.log(data);
+    req.session.user = user ? user : req.session.user;
     req.flash("success", "Photo created!");
     res.redirect("/");
   } catch (err) {

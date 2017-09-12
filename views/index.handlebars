@@ -16,3 +16,19 @@
   </div>
 
 </section>
+
+<section>
+  {{#each photos as |photo|}}
+    <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h4>{{photo.User.name}}</h4>
+    </div>
+    <div class="panel-body">
+      <img src="{{photo.url}}" alt="">
+      {{#if photo.currentUser}}
+      <a clas="btn btn-danger" href="/photos/{{photo.id}}?method=delete">delete</a>
+      {{/if}}
+    </div>
+  </div>
+  {{/each}}
+</section>

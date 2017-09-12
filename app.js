@@ -29,8 +29,17 @@ app.set("view engine", "handlebars");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Morgan logging
+// Method Override
+const methodOverride = require("method-override");
+const getPostSupport = require("express-method-override-get-post-support");
+app.use(
+  methodOverride(
+    getPostSupport.callback,
+    getPostSupport.options // { methods: ['POST', 'GET'] }
+  )
+);
 
+// Morgan logging
 const morgan = require("morgan");
 const morganToolkit = require("morgan-toolkit")(morgan);
 app.use(morganToolkit());

@@ -5,7 +5,7 @@ const bucket = process.env.AWS_S3_BUCKET;
 const mime = require("mime");
 const path = require("path");
 const md5 = require("md5");
-const { Photo } = require("../models");
+const { Photo, User } = require("../models");
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
@@ -14,14 +14,12 @@ const upload = multer({ storage });
 const FileUploader = {};
 
 FileUploader.single = field => {
-  console.log("Field is: ", field);
   return upload.single(field);
 };
 
 FileUploader.upload = async (file, user) => {
   // Use the mime library to get the correct
   // extension for the mimetype
-  console.log("In the uploader function!");
   const extension = mime.extension(file.mimetype);
 
   // Use the path library to get a consistent
@@ -38,18 +36,15 @@ FileUploader.upload = async (file, user) => {
     Key: `${filename}-${md5(Date.now())}.${extension}`,
     Body: file.data
   };
-  console.log("now to upload the file...");
   // Upload the file
-  const data = await s3.upload(options);
-  console.log("Data: ", data);
+  const data = await s3.upload(options).promise();
   const photo = await Photo.create({
     url: data.Location,
     name: data.key,
     user
   });
 
-  // Resolve the photo data
-  return photo;
+  return User.update({ _id: user._id }, { $push: { photos: photo } });
 };
 
 FileUploader.remove = async id => {
@@ -59,7 +54,7 @@ FileUploader.remove = async id => {
     Key: id
   };
 
-  const data = await s3.deleteObject(options);
+  const data = await s3.deleteObject(options).promise();
   const photo = await Photo.remove({ name: id });
   return photo;
 };
