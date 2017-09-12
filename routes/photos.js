@@ -31,16 +31,16 @@ router.post('/upload', fileUpload.single('file'), async ctx => {
 	};
 
 	try {
-		const user = await User.findOne({ username: ctx.state.user.username });
+		const user = await User.findOne({ username: 'bar' });
 		if (user) {
 			user.photos.push(newPhoto);
 			await user.save();
-			return res.redirect('/upload-success');
+			return ctx.redirect('/upload-success');
 		} else {
 			throw Error('Invalid User, not found');
 		}
 	} catch (err) {
-		console.err(err.stack);
+		console.error(err.stack);
 	}
 });
 
