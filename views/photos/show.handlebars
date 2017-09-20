@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-8 col-offset-2"  >
+    <a
+      href="/photos/{{ photo.key }}?_method=delete"
+      class="text-danger">
+      &times;
+    </a>
+    <p>Name: {{ photo.photoName }}</p>
+    <p>uploaded by {{ photo.userId.username }}</p>
+    <p>Description: {{ photo.description }}</p>
+    <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+  </div>
+</div>
+
+<div class="row">
+<h2>Other photos by {{photo.userId.username}}</h2>
+{{#each photos as |photo key|}}
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <a href="/photos/{{photo.key}}"><img src="{{ photo.url }}" alt="Photo"></a>
+      <div class="caption">
+        <h3>{{ photo.photoName }}</h3>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+
+  
