@@ -17,13 +17,32 @@
   <body>
     <nav class="navbar navbar-default">
       <div class="container-fluid">
-
           <div class="navbar-left">
             <h2>S3 Photos</h2>
+          </div>
+          {{#if session.passport.user}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/logout"><button class="btn btn-danger" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> LogOut</button></a>
+          </div>
+          {{else}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/register"><button class="btn btn-success" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Sign Up </button></a>
+          </div>
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/login"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Log In </button></a>
+          </div>
+          {{/if}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/users"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Users</button></a>
+          </div>
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/photos"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Photos</button></a>
           </div>
       </div>
       {{> shared/_flash }}
     </nav>
-    {{{body}}}
+    <div class="container-fluid">
+      {{{body}}}
+    </div>
   </body>
 </html>

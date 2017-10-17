@@ -25,7 +25,7 @@ const FileUploader = {};
 
 FileUploader.single = field => upload.single(field);
 
-FileUploader.upload = file => {
+FileUploader.upload = (file, user, description) => {
   const newFile = {
     name: path.parse(file.name).name,
     extension: mime.getExtension(file.mimetype)
@@ -47,7 +47,11 @@ FileUploader.upload = file => {
         const photos = require(Photo_Data_Path);
         const photo = {
           url: data.Location,
-          name: data.key
+          fullName: data.key,
+          shortName: newFile.name,
+          user: user.email,
+          created: new Date(),
+          description: description
         };
         photos[data.key] = photo;
         writePhotoDataFile(photos);
