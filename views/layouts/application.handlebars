@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <title>S3 Photos</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+          <div class="navbar-left">
+            <h2>S3 Photos</h2>
+          </div>
+          {{#if session.passport.user}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/logout"><button class="btn btn-danger" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> LogOut</button></a>
+          </div>
+          {{else}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/register"><button class="btn btn-success" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Sign Up </button></a>
+          </div>
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/login"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Log In </button></a>
+          </div>
+          {{/if}}
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/users"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Users</button></a>
+          </div>
+          <div class="navbar-right" style="margin-right: 1em;">
+            <a href="/photos"><button class="btn btn-primary" style="padding: .5em 1em .5em 1em; border-radius: 2em; margin-top:1em;"> Photos</button></a>
+          </div>
+      </div>
+      {{> shared/_flash }}
+    </nav>
+    <div class="container-fluid">
+      {{{body}}}
+    </div>
+  </body>
+</html>

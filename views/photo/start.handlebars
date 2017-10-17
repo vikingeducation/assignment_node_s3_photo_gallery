@@ -1,0 +1,28 @@
+<header class="page-header">
+  <h1>Photos Index</h1>
+  <a href="/photos/new"><button class="btn btn-primary">+ New Photo</button></a>
+</header>
+  <div class="row">
+    {{#if photos }}
+    {{#each photos as |photo| }}
+      <div class="col-xs-3" style="text-align:right; border: 2px solid black; border-radius:1em; margin-left: 2em;">
+        {{#if photo.owns}}
+        <a
+          href="/photos/{{ photo.fullName }}?_method=delete"
+          class="text-danger">
+          &times;
+        </a>
+        {{/if}}
+        <div style="text-align:left; word-wrap: break-word;">
+          <p>{{ photo.shortName }}</p>
+          <a href="photos/one/{{photo.fullName}}"><img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
+          <p>Created by {{photo.user}}</p>
+        </div>
+      </div>
+    {{/each }}
+    {{else}}
+    <div class="col-sm-10 col-sm-offset-1">
+      <p class="text-danger">No Photos yet</p>
+    </div>
+    {{/if }}
+  </div>

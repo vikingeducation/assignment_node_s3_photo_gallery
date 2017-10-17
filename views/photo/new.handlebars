@@ -1,0 +1,17 @@
+<div class="container-fluid">
+  <div class="row">
+<div class="col-sm-10 col-sm-offset-1">
+  <form action="/photos/new" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="photo_file">Photo File</label>
+      <input type="file" class="form-control" name="photo[file]" id="photo_file" required>
+    </div>
+    <div class="form-group">
+      <label for="photo_file">Photo Description</label><br>
+      <textarea name="photo[description]" placeholder="Description..." rows="5" cols="50"></textarea>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="btn btn-primary">
+    </div>
+  </form>
+</div>
