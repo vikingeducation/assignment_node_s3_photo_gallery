@@ -34,11 +34,6 @@ app.use(
 	})
 );
 
-app.use((req, res, next) => {
-	app.locals.session = req.session;
-	next();
-});
-
 // require Passport and the Local Strategy
 const passport = require("passport");
 app.use(passport.initialize());
@@ -54,6 +49,11 @@ passport.deserializeUser((id, done) => {
 	User.findById(id)
 		.then(user => done(null, user))
 		.catch(e => done(null, false));
+});
+
+app.use((req, res, next) => {
+	res.locals.user = req.user;
+	next();
 });
 
 // Method Override
@@ -92,6 +92,9 @@ app.set("view engine", "handlebars");
 // routes
 var loginRouter = require("./routers/login");
 app.use("/", loginRouter);
+
+var photosRouter = require("./routers/photos");
+app.use("/", photosRouter);
 
 // Start our app
 const port = process.env.PORT || process.argv[2] || 3000;

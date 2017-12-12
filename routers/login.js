@@ -13,7 +13,7 @@ const loggedInOnly = (req, res, next) => {
 };
 
 const loggedOutOnly = (req, res, next) => {
-	return !req.user ? next() : res.redirect("/");
+	return !req.user ? next() : res.redirect("/login");
 };
 
 // login view
@@ -41,13 +41,9 @@ router.post(
 	})
 );
 
-// Show User
-const onShow = (req, res) => {
-	res.render("users/show", { user: req.user });
-};
-
-router.get("/", loggedInOnly, onShow);
-router.get("/user", loggedInOnly, onShow);
+router.get("/user", loggedInOnly, (req, res) => {
+	res.render("users/show");
+});
 
 router.post("/register", loggedOutOnly, (req, res, next) => {
 	User.create(req.body)
