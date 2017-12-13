@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/coelacanth7/assignment_node_s3_photo_gallery#readme",
   "dependencies": {
+    "aws-sdk": "^2.169.0",
     "bcrypt": "^1.0.3",
     "bluebird": "^3.5.1",
     "cookie-session": "^2.0.0-beta.3",
@@ -27,7 +28,7 @@
     "express-method-override-get-post-support": "^1.0.0",
     "md5": "^2.2.1",
     "method-override": "^2.3.10",
-    "mongoose": "^4.13.6",
+    "mongoose": "^4.13.7",
     "mongoose-unique-validator": "^1.0.6",
     "morgan": "^1.9.0",
     "morgan-toolkit": "^1.0.2",

@@ -2,13 +2,23 @@
   <h1>New Photo</h1>
   <a href="/">Photos Index</a>
 </header>
-
+<br>
+<hr>
 <form action="/photos" method="post" enctype="multipart/form-data">
+  <input type="hidden" value="{{user.id}}" name="userId" />
   <div class="form-group">
-    <label for="photo_file">Photo File</label>
-    <input type="file" class="form-control" name="photo[file]" id="photo_file">
+    <label class="btn btn-primary">
+      Browse <input type="file" name="photo[file]" hidden>
+    </label>
   </div>
-
+  <div class="form-group">
+    <label for="photo_name">Photo Name</label>
+    <input type="text" class="form-control" name="photo[name]" id="photo_name">
+  </div>
+  <div class="form-group">
+    <label for="photo_desc">Photo Description</label>
+    <input type="text" class="form-control" name="photo[desc]" id="photo_desc">
+  </div>
   <div class="form-group">
     <input type="submit" class="btn btn-primary">
   </div>

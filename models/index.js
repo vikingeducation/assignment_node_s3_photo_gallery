@@ -9,5 +9,6 @@ process.env.NODE_ENV === "test" || mongoose.set("debug", true);
 const models = {};
 
 models.User = require("./user");
+models.Photo = require("./photo");
 
 module.exports = models;
