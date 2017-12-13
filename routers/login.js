@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const models = require("./../models");
 const User = mongoose.model("User");
+const Photo = mongoose.model("Photo");
 
 const passport = require("passport");
 
@@ -41,10 +42,6 @@ router.post(
 	})
 );
 
-router.get("/user", loggedInOnly, (req, res) => {
-	res.render("users/show");
-});
-
 router.post("/register", loggedOutOnly, (req, res, next) => {
 	User.create(req.body)
 		.then(user => {
@@ -58,6 +55,26 @@ router.post("/register", loggedOutOnly, (req, res, next) => {
 				next(e);
 			}
 		});
+});
+
+// get user show page
+router.get("/user/:id", loggedInOnly, (req, res) => {
+	var thisUser;
+	User.findOne({ _id: req.params.id })
+		.then(thatUser => {
+			thisUser = thatUser;
+			return Photo.find({ userId: req.params.id });
+		})
+		.then(photos => {
+			res.render("users/show", { photos, thisUser });
+		})
+		.catch(e => {
+			res.status(500).send(e.stack);
+		});
+});
+
+router.get("/user", loggedInOnly, (req, res) => {
+	res.redirect(`user/${req.user.id}`);
 });
 
 module.exports = router;

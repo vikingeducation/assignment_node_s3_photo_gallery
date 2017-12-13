@@ -52,4 +52,23 @@ router.post("/photos", mw, (req, res, next) => {
 		.catch(next);
 });
 
+// delete a photos
+router.delete("photos/:id", (req, res, next) => {
+	FileUpload.remove(req.params.id)
+		.then(() => {
+			res.redirect("/photos");
+		})
+		.catch(next);
+});
+
+// photos show
+router.get("/photo/:id", (req, res, next) => {
+	Photo.findOne({ _id: req.params.id })
+		.populate("userId")
+		.then(photo => {
+			res.render("photos/show", { photo });
+		})
+		.catch(next);
+});
+
 module.exports = router;

@@ -1,0 +1,13 @@
+<a
+  href="/photos/{{ photo.key }}?_method=delete"
+  class="text-danger">
+  &times;
+</a>
+<a href="/photo/{{photo.id}}"><img class="card-img-top" src="{{photo.url}}" alt="image"></a>
+<div>
+  <h4 class="card-title"><a href="/photo/{{photo.id}}">{{photo.photoName}}</a></h4>
+  <p class="card-text">{{photo.description}}</p>
+  <p>From: <a href="/user/{{photo.userId.id}}">{{photo.userId.username}}</a> </p>
+  <p>created: {{photo.createdAt}}</p>
+
+</div>
