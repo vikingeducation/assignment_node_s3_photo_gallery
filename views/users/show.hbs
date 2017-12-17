@@ -1,0 +1,24 @@
+<h2 class="text-center">User Profile</h2>
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd>{{user.firstName}} {{user.lastName}}</dd>
+  <dt>Email:</dt>
+  <dd>{{user.email}}</dd>
+</dl>
+<h4 class="text-center">Photos</h4>
+<hr>
+{{#if (any user.photos)}}
+  {{#each user.photos as |photo|}}
+    <div class="col-md-4 text-center">
+      <div class="col-md-12 thumbnail related-photo">
+        <div class="photo">
+          <a href="/photos/{{photo.id}}">
+            <img src="{{photo.url}}" alt="{{photo.fileName}}">
+          </a>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+{{else}}
+  <h5 class="text-center">No photos yet</h5>
+{{/if}}

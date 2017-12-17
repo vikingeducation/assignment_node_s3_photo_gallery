@@ -1,0 +1,24 @@
+<h2 class="text-center">Photos</h2>
+<hr>
+{{#if (any photos)}}
+  {{#each photos as |photo|}}
+    <div class="col-xs-6 col-md-2 thumbnail thumbnail-index">
+      <div class="photo">
+        <a href="/photos/{{photo.id}}">
+          <img src="{{photo.url}}" alt="{{photo.fileName}}">
+        </a>
+      </div>
+      <div class="caption">
+        <h5>
+          {{photo.fileName}}
+          {{#if (match photo.user.id ../currentUser.id)}}
+            <small><a href="photos/{{photo.id}}?_method=delete">delete</a></small>
+          {{/if}}
+        </h5>
+        <p>posted by <a href="/users/{{photo.user.id}}">{{photo.user.firstName}} {{photo.user.lastName}}</a></p>
+      </div>
+    </div>
+  {{/each}}
+{{else}}
+  <h3 class="text-center">No photos yet.</h3>
+{{/if}}
