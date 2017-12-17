@@ -1,0 +1,7 @@
+<h3>Users Index</h3>
+<hr>
+<ul>
+  {{#each users as |user|}}
+    <li><a href="/users/{{user.id}}">{{user.firstName}} {{user.lastName}}</a></li>
+  {{/each}}
+</ul>

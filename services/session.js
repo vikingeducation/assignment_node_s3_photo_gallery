@@ -12,13 +12,14 @@ const loggedOutOnly = (req, res, next) => {
   if (!req.user) {
     next();
   } else {
-    res.redirect("/users");
+    res.redirect("/photos");
   }
 };
 
 const setCurrentUser = (req, res, next) => {
   if (req.user) {
     User.findById(req.user.id)
+      .populate('photos')
       .then(user => {
         res.locals.currentUser = user;
         next();

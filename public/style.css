@@ -1,3 +1,39 @@
 .navbar-header {
   width: 100%;
 }
+
+.thumbnail.thumbnail-index {
+  min-height: 300px !important;
+  margin-right: 20px;
+}
+
+.photo {
+  min-height: 200px;
+}
+
+.photo img {
+  width: 100%;
+}
+
+.caption {
+  min-height: 110px;
+}
+
+.main-image {
+  width: 100%;
+}
+
+.thumbnail.thumbnail-show {
+  margin: 0 auto;
+}
+
+.realted-container {
+  width: 33%;
+}
+
+.related-photo {
+  max-height: 250px;
+  max-width: 200px;
+  float: none !important;
+  margin: 0 auto;
+}

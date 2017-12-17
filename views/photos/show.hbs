@@ -1,0 +1,24 @@
+<h2 class="text-center">{{photo.fileName}}</h2>
+<p class="text-center">posted by {{photo.user.firstName}} {{photo.user.lastName}}</p>
+<section class="clearfix text-center main-image">
+  <img src="{{photo.url}}" class="thumbnail thumbnail-show" />
+  {{#if (match photo.user.id currentUser.id)}}
+    <small><a href="photos/{{photo.id}}?_method=delete">delete</a></small>
+  {{/if}}
+</section>
+<h3 class="text-center" id="products-heading">Other Photos by {{photo.user.firstName}} {{photo.user.lastName}}</h3>
+<section id="relatedPhotos">
+  <div class="row">
+    {{#each photo.user.photos as |userPhoto|}}
+      <div class="col-md-4 text-center">
+        <div class="col-md-12 thumbnail related-photo">
+          <div class="photo">
+            <a href="/photos/{{userPhoto.id}}">
+              <img src="{{userPhoto.url}}" alt="{{userPhoto.fileName}}">
+            </a>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</section>

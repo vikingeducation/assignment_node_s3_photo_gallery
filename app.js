@@ -61,12 +61,35 @@ app.use((req, res, next) => {
 });
 
 
+// Sessions
+const expressSession = require("express-session");
+app.use(
+  expressSession({
+    secret: process.env.SECRET,
+    saveUninitialized: false,
+    resave: false
+  })
+);
+
+
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./lib/passport_strategy');
+
+const { setCurrentUser } = require('./services/session');
+app.use(setCurrentUser);
+
+
 // Routes
 const photos = require('./routers/photos');
+const sessions = require('./routers/sessions');
+const users = require('./routers/users');
 
-app.use('/', photos);
+app.use('/users', users);
+app.use('/', sessions);
 app.use('/photos', photos);
-
 
 
 // Template Engine

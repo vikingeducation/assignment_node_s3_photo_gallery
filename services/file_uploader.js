@@ -19,7 +19,30 @@ const FileUploader = {
 
       s3.upload(params, function(err, data) {
         if (err) reject(err);
+
         resolve(data);
+      });
+    });
+  },
+
+  remove: photo => {
+    return new Promise((resolve, reject) => {
+      const options = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: photo.key
+      };
+
+      s3.deleteObject(options, (err) => {
+        if (err) reject(err);
+
+        photo.user.update({ $pull: { photos: photo.id } })
+          .then(() => {
+            return photo.remove();
+          })
+          .then(() => {
+            resolve();
+          })
+          .catch(e => reject(e.stack));
       });
     });
   }
