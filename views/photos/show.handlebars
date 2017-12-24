@@ -1,0 +1,28 @@
+<a
+  href="/photos/{{ photo.key }}?_method=delete"
+  class="text-danger">
+  &times;
+</a>
+<a href="/photos/{{photo.key}}"><img class="card-img-top" src="{{photo.url}}" alt="image"></a>
+<div>
+  <h4 class="card-title"><a href="/photos/{{photo.id}}">{{photo.photoName}}</a></h4>
+  <p class="card-text">{{photo.description}}</p>
+  <p>Uploaded by: <a href="/users/{{photo.userId._id}}">{{photo.userId.fname}} {{photo.userId.lname}}</a> </p>
+  <p>Created at: {{ datetime photo.createdAt }}</p>
+
+</div>
+
+
+<div class="row">
+<h2>Other photos by {{photo.userId.fname}} {{photo.userId.lname}}</h2>
+{{#each photos as |photo key|}}
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <a href="/photos/{{photo.key}}"><img src="{{ photo.url }}" alt="Photo"></a>
+      <div class="caption">
+        <h3>{{ photo.photoName }}</h3>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
