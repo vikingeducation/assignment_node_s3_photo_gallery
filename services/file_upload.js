@@ -14,37 +14,15 @@ const md5 = require('md5');
 const fs = require('fs');
 const _ = require('lodash');
 
-console.log("Bucket: " + bucket)
-
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-
-// Helpers for managing the file-based
-// database for storing photo data
-const PHOTO_DATA_PATH = path.resolve('./data/photos.json');
-
-const _writePhotoDataFile = (photos) => {
-  fs.writeFileSync(
-    PHOTO_DATA_PATH,
-    JSON.stringify(photos, null, 2)
-  );
-};
-
-if (!fs.existsSync(PHOTO_DATA_PATH)) {
-  _writePhotoDataFile({});
-}
-
+const Photo = require("../models/Photo");
 
 const FileUploader = {};
-
-
 FileUploader.single = (field) => upload.single(field);
-
-
-FileUploader.upload = (file) => {
-
+FileUploader.upload = file => {
   // Use the mime library to get the correct
   // extension for the mimetype
   const extension = mime.extension(file.mimetype);
@@ -54,7 +32,6 @@ FileUploader.upload = (file) => {
   const filename = path.parse(file.name).name;
 
   return new Promise((resolve, reject) => {
-
     // Configure the S3 request options
     const options = {
       Bucket: bucket,
@@ -62,40 +39,40 @@ FileUploader.upload = (file) => {
       // Use the md5 library to create a unique
       // hash for this file name and attach
       // the extension
-      Key: `${ filename }-${ md5(Date.now()) }.${ extension }`,
-      Body: file.data
+      Key: `${filename}-${md5(Date.now())}.${extension}`,
+      Body: file.data,
+      // set the ACL to public access, otherwise can't retrieve file
+      ACL:'public-read-write'
     };
 
     // Upload the file
     s3.upload(options, (err, data) => {
-
       // If there's an error
       // reject the promise
       if (err) {
         reject(err);
       } else {
-
-        // Else we're going to
-        // write the data to a file
-        // (instead of using a database)
-        const photos = require(PHOTO_DATA_PATH);
-        const photo = {
+        const photo = new Photo({
           url: data.Location,
-          name: data.key
-        };
-        photos[data.key] = photo;
-        _writePhotoDataFile(photos);
+          key: data.Key,
+          photoName: file.photoName,
+          description: file.description,
+          userId: file.userId
+        });
 
-        // Resolve the photo data
-        resolve(photo);
+        photo.save((err, photo) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(photo);
+          }
+        });
       }
     });
   });
 };
 
-
-FileUploader.remove = (id) => {
-
+FileUploader.remove = id => {
   // Configure the request
   const options = {
     Bucket: bucket,
@@ -104,27 +81,19 @@ FileUploader.remove = (id) => {
 
   return new Promise((resolve, reject) => {
     s3.deleteObject(options, (err, data) => {
-
       // Reject if error
       if (err) {
         reject(err);
       } else {
-
-        // Delete the photo from the JSON
-        // file-based database
-        // if successful and resolve
-        // the photo data
-        const photos = require(PHOTO_DATA_PATH);
-        const photo = _.clone(photos[id]);
-        delete photos[id];
-        _writePhotoDataFile(photos);
-        resolve(photo);
+        Photo.remove({ key: id })
+        .then(() => {
+          resolve();
+        })  
+        .catch(() => reject(err));      
       }
     });
   });
 };
-
-
 
 module.exports = FileUploader;
 

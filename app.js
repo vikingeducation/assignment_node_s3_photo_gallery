@@ -20,37 +20,76 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // ----------------------------------------
 // Sessions/Cookies
 // ----------------------------------------
-const cookieSession = require('cookie-session');
+const cookieSession = require("cookie-session");
 
-app.use(cookieSession({
-  name: 'session',
-  keys: ['asdf1234567890qwer']
-}));
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["asdf1234567890qwer"]
+  })
+);
 
 app.use((req, res, next) => {
   app.locals.session = req.session;
   next();
 });
 
-
 // ----------------------------------------
 // Flash Messages
 // ----------------------------------------
-const flash = require('express-flash-messages');
+const flash = require("express-flash-messages");
 app.use(flash());
-
 
 // ----------------------------------------
 // Method Override
 // ----------------------------------------
-const methodOverride = require('method-override');
-const getPostSupport = require('express-method-override-get-post-support');
- 
- 
-app.use(methodOverride(
-  getPostSupport.callback,
-  getPostSupport.options // { methods: ['POST', 'GET'] } 
-));
+const methodOverride = require("method-override");
+const getPostSupport = require("express-method-override-get-post-support");
+
+app.use(
+  methodOverride(
+    getPostSupport.callback,
+    getPostSupport.options // { methods: ['POST', 'GET'] }
+  )
+);
+
+// ----------------------------------------
+// Mongoose
+// ----------------------------------------
+const mongoose = require("mongoose");
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState) {
+    next();
+  } else {
+    require("./mongo")().then(() => next());
+  }
+});
+
+// ----------------------------------------
+// Services
+// ----------------------------------------
+
+// Require passport, strategies and User model
+const passport = require("passport");
+const User = require("./models/User");
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Local Strategy Set Up
+const localStrategy = require("./services/local");
+passport.use(localStrategy);
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 
 // ----------------------------------------
@@ -121,8 +160,11 @@ morgan.token('data', (req, res, next) => {
 // ----------------------------------------
 // Routes
 // ----------------------------------------
+var loginRouter = require("./routers/login");
+app.use("/", loginRouter);
+
 const photosRouter = require('./routers/photos');
-app.use('/', photosRouter);
+app.use("/", photosRouter);
 
 
 // ----------------------------------------

@@ -1,0 +1,14 @@
+<header class="page-header">
+  <h1>Users Index</h1>
+</header>
+<div class="row">
+  {{#each users as |user| }}
+  <a href="/users/{{user.id}}">
+    <div class="col-xs-3" style="text-align:left; border: 2px solid black; border-radius:1em; margin-left: 2em;word-wrap: break-word;">
+        <p>{{ user.fname }} {{user.lname}}</p>
+        <p>{{ user.email }}</p>
+      </div>
+    </a>
+  {{/each }}
+  </div>
+</div>
