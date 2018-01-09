@@ -1,19 +1,19 @@
 // ----------------------------------------
 // AWS SDK
 // ----------------------------------------
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 const bucket = process.env.AWS_S3_BUCKET;
-const mime = require('mime');
-const path = require('path');
-const md5 = require('md5');
-const fs = require('fs');
-const _ = require('lodash');
-const multer = require('multer');
+const mime = require("mime");
+const path = require("path");
+const md5 = require("md5");
+const fs = require("fs");
+const _ = require("lodash");
+const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-const PHOTO_DATA_PATH = path.resolve('./services/data/photos.json');
+const PHOTO_DATA_PATH = path.resolve("./services/data/photos.json");
 
 const _writePhotoDataFile = photos => {
   fs.writeFileSync(PHOTO_DATA_PATH, JSON.stringify(photos, null, 2));
@@ -58,10 +58,13 @@ FileUploader.upload = file => {
         // Else we're going to
         // write the data to a file
         // (instead of using a database)
+        console.log("FILE IS HERE", file);
         const photos = require(PHOTO_DATA_PATH);
         const photo = {
           url: data.Location,
-          name: data.key
+          name: data.key,
+          description: file.description,
+          date: new Date()
         };
         photos[data.key] = photo;
         _writePhotoDataFile(photos);
