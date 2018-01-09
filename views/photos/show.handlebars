@@ -1,0 +1,14 @@
+<h1>This is the show page</h1>
+
+<div class="col-xs-4">
+  <a
+    href="/photos/{{ photo.name }}?_method=delete"
+    class="text-danger">
+    &times;
+  </a>
+  <p>{{ photo.name }}</p>
+  <p>{{ photo.description }}</p>
+  <p>{{ photo.date }}</p>
+  <p>{{ photo.username }}</p>
+  <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+</div>
