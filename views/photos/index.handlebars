@@ -1,0 +1,27 @@
+
+<header class="page-header">
+  <h1>Photos Index</h1>
+  <a href="/photos/uploads">+ New Photo</a>
+</header>
+
+
+{{#if (isEmpty photos) }}
+  <p class="text-danger">No Photos :(</p>
+{{else }}
+  <div class="row">
+    {{#each photos as |photo| }}
+      <div class="col-xs-4">
+        <a
+          href="/photos/{{ photo.name }}?_method=delete"
+          class="text-danger">
+          &times;
+        </a>
+        <p>{{ photo.name }}</p>
+        <p>{{ photo.description }}</p>
+        <p>{{ photo.date }}</p>
+        <p>{{ photo.username }}</p>
+        <a href="/photos/{{photo.name}}"><img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
+      </div>
+    {{/each }}
+  </div>
+{{/if }}
