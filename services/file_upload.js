@@ -27,7 +27,7 @@ const FileUploader = {};
 FileUploader.single = field => upload.single(field);
 
 FileUploader.upload = file => {
-  const extension = mime.extension(file.mimetype);
+  const extension = mime.getExtension(file.mimetype);
   const filename = path.parse(file.name).name;
 
   return new Promise((resolve, reject) => {
@@ -48,6 +48,28 @@ FileUploader.upload = file => {
         };
         photos[data.key] = photo;
 
+        _writePhotoDataFile(photos);
+        resolve(photo);
+      }
+    });
+  });
+};
+
+FileUploader.remove = id => {
+  const options = {
+    Bucket: bucket,
+    Key: id
+  };
+
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(options, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        const photos = require(PHOTO_DATA_PATH);
+        const photo = _.clone(photos[id]);
+
+        delete photos[id];
         _writePhotoDataFile(photos);
         resolve(photo);
       }

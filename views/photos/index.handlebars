@@ -4,10 +4,10 @@
 </header>
 
 {{#if (isEmpty photos) }}
-  <p class="text-danger">No Photos :(</p>
+  <p class="text-danger">No photos yet</p>
 {{else }}
   <div class="row">
-    {{#each photos as |photo key| }}
+    {{#each photos as |photo|}}
       <div class="col-xs-4">
         <a
           href="/photos/{{ photo.name }}?_method=delete"

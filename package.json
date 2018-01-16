@@ -1,21 +1,25 @@
 {
   "name": "assignment_node_s3_photo_gallery",
   "version": "1.0.0",
-  "description": "Uploading images to Amazon S3 in an Express application? Brilliant!",
+  "description":
+    "Uploading images to Amazon S3 in an Express application? Brilliant!",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "which nodemon > /dev/null && nodemon app.js || node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thomahau/assignment_node_s3_photo_gallery.git"
+    "url":
+      "git+https://github.com/thomahau/assignment_node_s3_photo_gallery.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/thomahau/assignment_node_s3_photo_gallery/issues"
   },
-  "homepage": "https://github.com/thomahau/assignment_node_s3_photo_gallery#readme",
+  "homepage":
+    "https://github.com/thomahau/assignment_node_s3_photo_gallery#readme",
   "dependencies": {
     "aws-sdk": "^2.181.0",
     "bluebird": "^3.5.1",
