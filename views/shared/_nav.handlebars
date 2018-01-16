@@ -14,8 +14,10 @@
 
       <ul class="nav navbar-nav navbar-right">
         {{#if user}}
-        <li><a href="">{{user.username}}</a></li>
-        <li><a href="/logout">Log Out</a></li>
+        <li><a href="{{usersPath}}/{{user.id}}">{{user.email}}</a></li>
+        <li><a href="{{usersPath}}">Users</a></li>
+        <li><a href="{{photosPath}}">Photos</a></li>
+        <li><a href="{{logoutPath}}">Log Out</a></li>
         {{/if}}
       </ul>
 

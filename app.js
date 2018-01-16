@@ -94,11 +94,6 @@ morgan.token('data', (req, res, next) => {
   return `${data}`;
 });
 
-// Routes
-const photosRouter = require('./controllers/photos');
-
-app.use('/', photosRouter);
-
 // Template engine
 const expressHandlebars = require('express-handlebars');
 const helpers = require('./helpers');
@@ -112,6 +107,97 @@ const hbs = expressHandlebars.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
+// Mongoose
+const mongoose = require('mongoose');
+
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState) {
+    next();
+  } else {
+    require('./mongo')().then(() => next());
+  }
+});
+
+// Services
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models').User;
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(
+  new LocalStrategy(
+    {
+      usernameField: 'email'
+    },
+    function(email, password, done) {
+      User.findOne({ email }, function(err, user) {
+        if (err) return done(err);
+        if (!user || !user.validatePassword(password)) {
+          return done(null, false, { message: 'Invalid email/password' });
+        }
+        return done(null, user);
+      });
+    }
+  )
+);
+
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then(user => done(null, user))
+    .catch(e => done(null, false));
+});
+
+// Session helper middleware
+const loggedInOnly = (req, res, next) => {
+  return req.user ? next() : res.redirect('/login');
+};
+
+const loggedOutOnly = (req, res, next) => {
+  return !req.user ? next() : res.redirect('/');
+};
+
+// Routes
+app.get('/login', loggedOutOnly, (req, res) => {
+  res.render('sessions/new');
+});
+
+const onLogout = (req, res) => {
+  req.logout();
+  req.method = 'GET';
+  res.redirect('/login');
+};
+
+app.get('/logout', loggedInOnly, onLogout);
+app.delete('/logout', loggedInOnly, onLogout);
+
+app.post(
+  '/sessions',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true
+  })
+);
+
+const usersRouter = require('./controllers/users')({
+  loggedInOnly,
+  loggedOutOnly
+});
+const photosRouter = require('./controllers/photos');
+
+app.use('/users', usersRouter);
+app.use('/photos', photosRouter);
+app.use('/', (req, res) => {
+  if (req.user) {
+    res.redirect('/photos');
+  } else {
+    res.redirect('/login');
+  }
+});
+
 // Server
 const port = process.env.PORT || process.argv[2] || 3000;
 const host = 'localhost';
@@ -120,7 +206,7 @@ let args;
 process.env.NODE_ENV === 'production' ? (args = [port]) : (args = [port, host]);
 
 args.push(() => {
-  console.log(`Listening: http://${host}:${port}\n`);
+  console.log(`Listening: http://${host}:${port}`);
 });
 
 app.listen.apply(app, args);

@@ -1,24 +1,25 @@
 const express = require('express');
 const FileUploader = require('./../services/file_upload');
+const h = require('./../helpers');
 
 const router = express.Router();
 
 // Index
-router.get(['/', '/photos'], (req, res) => {
+router.get('/', (req, res) => {
   const photos = require('./../data/photos');
   console.log(photos);
-  res.render('photos/index', { photos });
+  res.render('photos/index', { user: req.user, photos });
 });
 
 // New
-router.get('/photos/new', (req, res) => {
+router.get('/new', (req, res) => {
   res.render('photos/new');
 });
 
 // Create
 const mw = FileUploader.single('photo[file]');
 
-router.post('/photos', mw, (req, res, next) => {
+router.post('/', mw, (req, res, next) => {
   console.log('Files', req.file);
 
   FileUploader.upload({
@@ -28,17 +29,17 @@ router.post('/photos', mw, (req, res, next) => {
   })
     .then(data => {
       console.log(data);
-      req.flash('success', 'File uploaded!');
-      res.redirect('/photos');
+      req.flash('success', 'Photo uploaded!');
+      res.redirect(h.photosPath());
     })
     .catch(next);
 });
 
 // Destroy
-router.delete('/photos/:id', (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
   FileUploader.remove(req.params.id)
     .then(() => {
-      res.redirect('/photos');
+      res.redirect(h.photosPath());
     })
     .catch(next);
 });

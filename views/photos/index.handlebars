@@ -1,6 +1,6 @@
 <header class="page-header">
   <h1>Photos Index</h1>
-  <a href="/photos/new">+ New Photo</a>
+  <a href="{{newPhotoPath}}">+ New Photo</a>
 </header>
 
 {{#if (isEmpty photos) }}
@@ -10,7 +10,7 @@
     {{#each photos as |photo|}}
       <div class="col-xs-4">
         <a
-          href="/photos/{{ photo.name }}?_method=delete"
+          href="{{photosPath}}/{{ photo.name }}?_method=delete"
           class="text-danger">
           &times;
         </a>
