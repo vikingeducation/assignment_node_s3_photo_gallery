@@ -3,20 +3,27 @@
   <a href="{{newPhotoPath}}">+ New Photo</a>
 </header>
 
-{{#if (isEmpty photos) }}
-  <p class="text-danger">No photos yet</p>
-{{else }}
+{{#if photos.length}}
   <div class="row">
     {{#each photos as |photo|}}
-      <div class="col-xs-4">
-        <a
-          href="{{photosPath}}/{{ photo.name }}?_method=delete"
-          class="text-danger">
-          &times;
-        </a>
-        <p>{{ photo.name }}</p>
-        <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+      <div class="col-sm-4">
+        <div class="thumbnail">
+          <a href="{{photosPath}}/{{photo.id}}">
+            <img src="{{photo.url}}" alt="Photo" class="img-responsive">
+          </a>
+          <div class="caption">
+            <p>{{photo.name}}</p>
+            <p>
+              <span>Uploaded by <a href="{{usersPath}}/{{photo.user.id}}">{{photo.user.email}}</a></span>
+              {{#if (canDelete ../user photo)}}
+                <span class="pull-right"><a class="btn btn-xs btn-danger" href="{{photosPath}}/{{photo.name}}?_method=delete">Delete</a></span>
+              {{/if }}
+            </p>
+          </div>
+        </div>
       </div>
     {{/each }}
   </div>
+{{else }}
+  <p class="text-danger">No photos yet</p>
 {{/if }}

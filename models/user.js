@@ -28,7 +28,7 @@ UserSchema.plugin(uniqueValidator);
 
 UserSchema.virtual('password')
   .get(function() {
-    return this._password;
+    return this.passwordHash;
   })
   .set(function(value) {
     this._password = value;

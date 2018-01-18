@@ -27,6 +27,11 @@ module.exports = middlewares => {
       });
   });
 
+  // New
+  router.get('/new', loggedOutOnly, (req, res) => {
+    res.render('users/new');
+  });
+
   // Show
   router.get('/:id', (req, res, next) => {
     User.findById(req.params.id)
@@ -45,13 +50,8 @@ module.exports = middlewares => {
       });
   });
 
-  // New
-  router.get('/user/new', loggedOutOnly, (req, res) => {
-    res.render('users/new');
-  });
-
   // Create
-  router.post('/users', loggedOutOnly, (req, res, next) => {
+  router.post('/', loggedOutOnly, (req, res, next) => {
     const userParams = {
       fname: req.body.user.fname,
       lname: req.body.user.lname,

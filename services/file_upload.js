@@ -12,15 +12,15 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Helpers for managing the file-based database for storing photo data
-const PHOTO_DATA_PATH = path.resolve('./data/photos.json');
-
-const _writePhotoDataFile = photos => {
-  fs.writeFileSync(PHOTO_DATA_PATH, JSON.stringify(photos, null, 2));
-};
-
-if (!fs.existsSync(PHOTO_DATA_PATH)) {
-  _writePhotoDataFile({});
-}
+// const PHOTO_DATA_PATH = path.resolve('./data/photos.json');
+//
+// const _writePhotoDataFile = photos => {
+//   fs.writeFileSync(PHOTO_DATA_PATH, JSON.stringify(photos, null, 2));
+// };
+//
+// if (!fs.existsSync(PHOTO_DATA_PATH)) {
+//   _writePhotoDataFile({});
+// }
 
 const FileUploader = {};
 
@@ -41,14 +41,11 @@ FileUploader.upload = file => {
       if (err) {
         reject(err);
       } else {
-        const photos = require(PHOTO_DATA_PATH);
         const photo = {
-          url: data.Location,
-          name: data.key
+          name: data.key,
+          url: data.Location
         };
-        photos[data.key] = photo;
 
-        _writePhotoDataFile(photos);
         resolve(photo);
       }
     });
@@ -66,12 +63,7 @@ FileUploader.remove = id => {
       if (err) {
         reject(err);
       } else {
-        const photos = require(PHOTO_DATA_PATH);
-        const photo = _.clone(photos[id]);
-
-        delete photos[id];
-        _writePhotoDataFile(photos);
-        resolve(photo);
+        resolve();
       }
     });
   });

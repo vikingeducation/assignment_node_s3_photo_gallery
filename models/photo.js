@@ -8,8 +8,9 @@ const PhotoSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User'
     },
-    filename: String,
-    url: String
+    name: String,
+    url: String,
+    description: String
   },
   {
     timestamps: true

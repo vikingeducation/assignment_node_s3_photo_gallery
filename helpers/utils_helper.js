@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 const UtilsHelper = {};
 
 UtilsHelper.debug = obj => {
@@ -10,8 +8,8 @@ UtilsHelper.json = obj => {
   return JSON.stringify(obj, null, 2);
 };
 
-UtilsHelper.isEmpty = obj => {
-  return _.isEmpty(obj);
+UtilsHelper.canDelete = (user, photo) => {
+  return user.id.toString() === photo.user.id.toString();
 };
 
 module.exports = UtilsHelper;
