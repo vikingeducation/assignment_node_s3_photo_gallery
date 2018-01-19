@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/public`));
 
 // Logging
 const morgan = require('morgan');
@@ -186,7 +186,9 @@ const usersRouter = require('./controllers/users')({
   loggedInOnly,
   loggedOutOnly
 });
-const photosRouter = require('./controllers/photos');
+const photosRouter = require('./controllers/photos')({
+  loggedInOnly
+});
 
 app.use('/users', usersRouter);
 app.use('/photos', photosRouter);

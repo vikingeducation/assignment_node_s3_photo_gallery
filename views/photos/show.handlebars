@@ -41,5 +41,18 @@
     {{#if (canDelete user photo)}}
       <a href="{{photosPath}}/{{photo.name}}?_method=delete" class="btn btn-danger">Delete Photo</a>
     {{/if }}
+    {{#if otherPhotos.length}}
+      <hr>
+      <h3>Other photos from this user</h3>
+        {{#each otherPhotos as |photo|}}
+          <div class="col-sm-4">
+            <div class="thumbnail">
+              <a href="{{photosPath}}/{{photo.id}}">
+                <img src="{{photo.url}}" alt="Photo" class="other-img">
+              </a>
+            </div>
+          </div>
+        {{/each }}
+    {{/if }}
   </div>
 </div>

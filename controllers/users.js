@@ -33,8 +33,14 @@ module.exports = middlewares => {
   });
 
   // Show
-  router.get('/:id', (req, res, next) => {
+  router.get('/:id', loggedInOnly, (req, res, next) => {
     User.findById(req.params.id)
+      .populate({
+        path: 'photos',
+        populate: {
+          path: 'user'
+        }
+      })
       .then(profile => {
         res.render('users/show', { user: req.user, profile });
       })

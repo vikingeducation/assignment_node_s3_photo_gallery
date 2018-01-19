@@ -7,9 +7,9 @@
   <div class="row">
     {{#each photos as |photo|}}
       <div class="col-sm-4">
-        <div class="thumbnail">
+        <div class="thumbnail gallery-thumbnail">
           <a href="{{photosPath}}/{{photo.id}}">
-            <img src="{{photo.url}}" alt="Photo" class="img-responsive">
+            <img src="{{photo.url}}" alt="Photo" class="gallery-img">
           </a>
           <div class="caption">
             <p>{{photo.name}}</p>
