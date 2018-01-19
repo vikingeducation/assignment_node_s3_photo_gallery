@@ -1,0 +1,29 @@
+<header class="page-header">
+  <h1>Photos Index</h1>
+  <a href="{{newPhotoPath}}">+ New Photo</a>
+</header>
+
+{{#if photos.length}}
+  <div class="row">
+    {{#each photos as |photo|}}
+      <div class="col-sm-4">
+        <div class="thumbnail gallery-thumbnail">
+          <a href="{{photosPath}}/{{photo.id}}">
+            <img src="{{photo.url}}" alt="Photo" class="gallery-img">
+          </a>
+          <div class="caption">
+            <p>{{photo.name}}</p>
+            <p>
+              <span>Uploaded by <a href="{{usersPath}}/{{photo.user.id}}">{{photo.user.email}}</a></span>
+              {{#if (canDelete ../user photo)}}
+                <span class="pull-right"><a class="btn btn-xs btn-danger" href="{{photosPath}}/{{photo.name}}?_method=delete">Delete</a></span>
+              {{/if }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {{/each }}
+  </div>
+{{else }}
+  <p class="text-danger">No photos yet</p>
+{{/if }}

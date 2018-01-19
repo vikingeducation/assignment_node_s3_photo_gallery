@@ -1,0 +1,22 @@
+<header class="page-header">
+  <h1>Users Index</h1>
+</header>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users as |user|}}
+    <tr>
+      <td><a href="{{usersPath}}/{{user.id}}">{{user.email}}</td>
+      <td>{{user.fname}}</td>
+      <td>{{user.lname}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

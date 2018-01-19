@@ -1,0 +1,58 @@
+<header class="page-header">
+  <h1>Photo View</h1>
+  <a href="{{photosPath}}">Photos Index</a>
+</header>
+
+<div class="row">
+  <div class="col-sm-4">
+    <img src="{{photo.url}}" alt="Photo" class="img-responsive">
+  </div>
+  <div class="col-sm-8">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>File Name</td>
+          <td>{{photo.name}}</td>
+        </tr>
+        <tr>
+          <td>URL</td>
+          <td><a href="{{photo.url}}">{{photo.url}}</a></td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>{{photo.description}}</td>
+        </tr>
+        <tr>
+          <td>Uploaded By</td>
+          <td><a href="{{usersPath}}/{{photo.user.id}}">{{photo.user.email}}</a></td>
+        </tr>
+        <tr>
+          <td>Uploaded</td>
+          <td>{{photo.createdAt}}</td>
+        </tr>
+      </tbody>
+    </table>
+    {{#if (canDelete user photo)}}
+      <a href="{{photosPath}}/{{photo.name}}?_method=delete" class="btn btn-danger">Delete Photo</a>
+    {{/if }}
+    {{#if otherPhotos.length}}
+      <hr>
+      <h3>Other photos from this user</h3>
+        {{#each otherPhotos as |photo|}}
+          <div class="col-sm-4">
+            <div class="thumbnail">
+              <a href="{{photosPath}}/{{photo.id}}">
+                <img src="{{photo.url}}" alt="Photo" class="other-img">
+              </a>
+            </div>
+          </div>
+        {{/each }}
+    {{/if }}
+  </div>
+</div>
