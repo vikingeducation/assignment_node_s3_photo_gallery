@@ -1,2 +1,2 @@
-# assignment_node_s3_photo_gallery
+# AWS_S3_photos_with_mongoose
 Uploading images to Amazon S3 in an Express application? Brilliant!

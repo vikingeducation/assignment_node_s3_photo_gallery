@@ -1,0 +1,28 @@
+<header class="page-header">
+  <h1>Photos Index</h1>
+  <a href="/new">+ New Photo</a>
+</header>
+
+{{#if photos.length}}
+<div class="row">
+  {{#each photos as |photo|}}
+    <!-- <pre>{{photo}}</pre> -->
+    <div class="card" style="width: 20rem;">
+      <a
+        href="/photos/{{ photo.key }}?_method=delete"
+        class="text-danger">
+        &times;
+      </a>
+      <a href="/photo/{{photo.id}}"><img class="card-img-top" src="{{photo.url}}" alt="image"></a>
+      <div class="card-body">
+        <h4 class="card-title"><a href="/photo/{{photo.id}}">{{photo.photoName}}</a></h4>
+        <p class="card-text">{{photo.description}}</p>
+        <p>From: <a href="/user/{{photo.userId.id}}">{{photo.userId.username}}</a> </p>
+      </div>
+    </div>
+
+  {{/each}}
+  </div>
+{{else}}
+  <h1>No Photos Yet!</h1>
+{{/if}}
